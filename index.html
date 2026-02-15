@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem GA & KPI MRT Jakarta | GASSTerus-v.2</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --mrt-blue: #005EB8;
+      --mrt-dark-blue: #004a94;
+      --mrt-green: #00A651;
+      --mrt-dark: #0f172a;
+
+      --bg-light: #f8fafc;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --input-bg: #ffffff;
+    }
+
+    body.dark-mode {
+      --bg-light: #121212;
+      --text-dark: #e2e8f0;
+      --text-muted: #94a3b8;
+      --card-bg: #1e1e1e;
+      --border-color: #2d2d2d;
+      --input-bg: #2d2d2d;
+    }
+
+    body {
+      background: var(--bg-light);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      font-size: 0.92rem; /* (3) lebih kecil */
+      padding-bottom: 0;  /* footer hanya saat halaman tertentu */
+      transition: background 0.3s, color 0.3s;
+    }
+    body.footer-visible:not(.on-landing){ padding-bottom: 54px; }
+body.on-landing{ padding-bottom: 0 !important; }
+
+
+    body.dark-mode .form-control,
+    body.dark-mode .form-select {
+      background-color: var(--input-bg);
+      border-color: var(--border-color);
+      color: var(--text-dark);
+    }
+    body.dark-mode .form-control:focus {
+      border-color: var(--mrt-blue);
+      background-color: #333;
+    }
+    body.dark-mode .bg-light { background-color: #252525 !important; }
+    body.dark-mode .table { color: var(--text-dark); }
+    body.dark-mode .table-light { background-color: #2d2d2d; color: var(--text-dark); }
+
+    /* --- NAVIGATION --- */
+    .topbar {
+      position: sticky; top: 0; z-index: 1000;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      display: none;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+    .topbar.show { display: block; }
+
+    .btn-nav {
+      font-weight: 700;
+      color: var(--text-muted);
+      border-radius: 10px;
+      padding: 7px 12px; /* (3) lebih tipis */
+      border:none;
+      background: transparent;
+      transition:0.2s;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 0.88rem; /* (3) lebih kecil */
+    }
+    .btn-nav:hover { color: var(--mrt-blue); background: rgba(0, 94, 184, 0.1); }
+
+    .nav-item-dropdown { position: relative; display: inline-block; }
+    .dropdown-content {
+      display: none; position: absolute; background-color: var(--card-bg);
+      min-width: 180px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color);
+      top: 100%; left: 0;
+    }
+    .dropdown-content button {
+      color: var(--text-dark);
+      padding: 10px 12px;
+      display: block;
+      width: 100%;
+      text-align: left;
+      border: none;
+      background: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .dropdown-content button:hover { background-color: rgba(0, 94, 184, 0.1); color: var(--mrt-blue); }
+    .nav-item-dropdown:hover .dropdown-content { display: block; }
+
+    /* --- LANDING PAGE --- */
+    #pageLanding {
+      width: 100vw; height: 100vh;
+      display: none;
+      background: var(--bg-light);
+    }
+    #pageLanding.active { display: flex; }
+
+    .landing-left {
+      flex: 1.2; position: relative;
+      background: url('https://images.unsplash.com/photo-1555660232-2d487f54c935?q=80&w=1920&auto=format&fit=crop');
+      background-size: cover; background-position: center; overflow: hidden;
+    }
+    .landing-left::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0, 94, 184, 0.85), rgba(0, 166, 81, 0.7));
+      z-index: 1;
+    }
+    .landing-left-content {
+      position: relative; z-index: 2; height: 100%;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 54px; color: white;
+    }
+    .hero-badge {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(5px);
+      padding: 7px 14px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-bottom: 14px;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.3);
+      font-size: 0.82rem;
+    }
+    .hero-title {
+      font-size: 3.0rem;
+      font-weight: 900;
+      line-height: 1.08;
+      margin-bottom: 12px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .hero-desc {
+      font-size: 1.0rem;
+      opacity: 0.92;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .landing-right {
+      flex: 0.8;
+      background: var(--card-bg);
+      display: flex; align-items: center; justify-content: center;
+      padding: 36px;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .menu-container { width: 100%; max-width: 420px; }
+    .welcome-text h2 { color: var(--mrt-blue); font-weight: 900; font-size: 1.9rem; margin-bottom: 2px; }
+    .menu-label { font-size: 0.72rem; color: #94a3b8; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+
+    .menu-btn {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      border-radius: 16px; cursor: pointer;
+      text-decoration: none; transition: all 0.2s ease;
+      border: 2px solid transparent; background: var(--input-bg);
+    }
+    .btn-wrap { display: flex; align-items: center; gap: 12px; }
+    .btn-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0; transition: 0.2s;
+    }
+    .btn-info { display: flex; flex-direction: column; }
+    .btn-title { font-weight: 800; font-size: 0.98rem; line-height: 1.2; color: var(--text-dark); }
+    .btn-desc { font-size: 0.78rem; font-weight: 500; margin-top: 2px; color: var(--text-muted); }
+
+    .menu-btn.outline { border: 1px solid var(--border-color); color: var(--text-dark); }
+    .menu-btn.outline .btn-icon { background: rgba(0,0,0,0.05); color: var(--text-dark); }
+    body.dark-mode .menu-btn.outline .btn-icon { background: #333; color: #fff; }
+    .menu-btn.outline:hover { border-color: var(--mrt-blue); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+    .menu-btn.outline:hover .btn-icon { background: rgba(0, 94, 184, 0.1); color: var(--mrt-blue); }
+    .menu-btn.outline:hover .btn-title { color: var(--mrt-blue); }
+
+    .landing-footer { margin-top: 22px; text-align: center; font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
+
+    @media (max-width: 992px) {
+  #pageLanding { flex-direction: column; height: 100vh; min-height: 100vh; overflow: hidden; }
+  .landing-right { overflow-y: auto; }
+    }
+
+    /* --- INNER PAGES --- */
+    .page { display: none; padding-bottom: 40px; animation: fadeIn 0.25s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+    .cardx {
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      overflow: hidden;
+      margin-bottom: 16px;
+      transition: background 0.3s;
+    }
+    .cardx-h {
+      padding: 14px 18px; /* (3) lebih tipis */
+      border-bottom: 1px solid var(--border-color);
+      background: var(--card-bg);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .cardx-b { padding: 18px; } /* (3) lebih tipis */
+
+    /* --- RICH TEXT EDITOR --- */
+    .rich-editor-container { border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; background: var(--input-bg); }
+    .editor-toolbar { background: var(--bg-light); padding: 6px; border-bottom: 1px solid var(--border-color); display: flex; gap: 4px; flex-wrap: wrap; }
+    .editor-btn { width: 30px; height: 30px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); font-size: 0.9rem; }
+    .editor-btn:hover { background: var(--border-color); color: var(--mrt-blue); }
+    .editor-content { min-height: 88px; padding: 10px 12px; overflow-y: auto; outline: none; color: var(--text-dark); font-size: 0.92rem; }
+    .editor-content ul, .editor-content ol { padding-left: 20px; margin-bottom: 0; }
+    .editor-content[contenteditable="true"]:empty:before { content: attr(placeholder); color: #94a3b8; }
+
+    /* --- GUIDE DECOR --- */
+    .guide-hero {
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 18px;
+      background:
+        radial-gradient(1000px 260px at 20% 0%, rgba(0,94,184,0.10), transparent 60%),
+        radial-gradient(1000px 260px at 80% 0%, rgba(0,166,81,0.10), transparent 60%),
+        var(--card-bg);
+    }
+    .guide-chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      background: var(--input-bg);
+      font-weight: 800;
+      font-size: 0.82rem;
+      color: var(--text-dark);
+    }
+    .guide-step{
+      display:flex; gap: 12px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .step-ico{
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0;
+      background: rgba(0,94,184,0.10);
+      color: var(--mrt-blue);
+      font-size: 1.1rem;
+      border: 1px solid rgba(0,94,184,0.15);
+    }
+    .step-title{ font-weight: 900; margin:0; font-size: 0.95rem; }
+    .step-desc{ margin:0; color: var(--text-muted); font-weight: 500; font-size: 0.86rem; line-height: 1.45; }
+
+    /* --- FLOATING DARK MODE BUTTON --- */
+    .float-dark-btn {
+      position: fixed; left: 18px; bottom: 18px;
+      width: 48px; height: 48px;
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; color: var(--text-dark);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      cursor: pointer; z-index: 9999;
+      transition: 0.2s;
+    }
+    body.footer-visible .float-dark-btn { bottom: 70px; } /* aman dari footer */
+    .float-dark-btn:hover { transform: scale(1.06); border-color: var(--mrt-blue); color: var(--mrt-blue); }
+
+    /* --- FOOTER BAR (ONLY SOME PAGES) --- */
+    .footer-bar{
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      height: 44px; /* (3) lebih tipis */
+      display: none; /* (2) default hidden */
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 10px;
+      z-index: 9998;
+      color: #fff;
+      background: linear-gradient(135deg, rgba(0, 94, 184, 0.92), rgba(0, 166, 81, 0.88));
+      box-shadow: 0 -6px 18px rgba(0,0,0,0.10);
+    }
+    .footer-bar.show{ display:flex; }
+    .footer-link{
+      color: #fff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 800;
+      border-radius: 999px;
+      padding: 6px 10px;
+      transition: 0.2s;
+      line-height: 1;
+      font-size: 0.78rem; /* (3) lebih kecil */
+    }
+    .footer-link i{ font-size: 1.02rem; color: #fff; transition: 0.2s; }
+    .footer-link:hover{ background: rgba(255,255,255,0.16); }
+    .footer-link.email:hover i{ color: #c7d2fe; }
+    .footer-link.wa:hover i{ color: #86efac; }
+
+    /* --- PRINT (4) lebih rapi --- */
+    @media print {
+      @page { size: A4; margin: 12mm; }
+      body {
+        background: #fff !important;
+        color: #000 !important;
+        font-size: 10.5pt;
+        overflow: visible;
+        padding-bottom: 0 !important;
+      }
+      .topbar, .no-print, .btn, #pageLanding, .float-dark-btn, .footer-bar { display: none !important; }
+      .page { display: none !important; }
+      .page.print-active { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+      .cardx { border: none !important; box-shadow: none !important; background: #fff !important; }
+      .cardx-b { padding: 0 !important; }
+      h1,h2,h3,h4,h5,h6 { color: #000 !important; }
+      .table { font-size: 9.5pt; }
+      .bg-light { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border: 1px solid #ddd; }
+      .editor-content, #wr_deskripsi, #wr_catatan { white-space: normal !important; word-wrap: break-word !important; color: #000 !important; }
+      img { page-break-inside: avoid; break-inside: avoid; }
+      .page-break { break-before: page; page-break-before: always; }
+    }
+	body.on-landing #innerPages{
+  display: none !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+  </style>
+</head>
+
+<body class="on-landing" oncontextmenu="return false;">
+
+  <button class="float-dark-btn no-print" onclick="toggleDarkMode()" title="Mode Gelap">
+    <i class="bi bi-moon-stars-fill" id="darkModeIcon"></i>
+  </button>
+
+  <div class="topbar no-print" id="innerNav">
+    <div class="container py-2 d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-2 text-dark fw-bold">
+        <i class="bi bi-rocket-takeoff text-primary fs-5"></i> GASS Terus!
+      </div>
+
+      <div class="d-flex gap-1 align-items-center">
+        <button class="btn-nav d-none d-md-inline-block" onclick="routeTo('landing')"><i class="bi bi-house-door"></i> Beranda</button>
+        <button class="btn-nav" onclick="routeTo('workSheet')"><i class="bi bi-file-earmark-text"></i> Kertas Kerja</button>
+
+        <div class="nav-item-dropdown">
+          <button class="btn-nav"><i class="bi bi-ui-checks"></i> Evaluasi KPI <i class="bi bi-chevron-down ms-1" style="font-size:0.7em;"></i></button>
+          <div class="dropdown-content">
+            <button onclick="routeTo('single')">Evaluasi KPI 2025</button>
+            <button onclick="routeTo('kpi2026')">Evaluasi KPI 2026</button>
+          </div>
+        </div>
+
+        <button class="btn-nav d-none d-md-inline-block" onclick="routeTo('guide')"><i class="bi bi-question-circle"></i> Panduan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LANDING -->
+  <section id="pageLanding" class="active no-print">
+    <div class="landing-left">
+      <div class="landing-left-content">
+        <div>
+          <div class="hero-badge"><i class="bi bi-building me-2"></i>General Affairs Department</div>
+          <h1 class="hero-title">Sistem Pelaporan<br/>Kegiatan Operasional</h1>
+          <p class="hero-desc">Platform internal General Affairs Department untuk pembuatan laporan, kertas kerja, dan evaluasi kinerja tahunan.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="landing-right">
+      <div class="menu-container">
+        <div class="welcome-text">
+          <h2>Selamat Datang!</h2>
+		  <h2>Lagi Cari Apa Nih? <br></h2>
+        </div>
+        <div class="menu-label">PELAPORAN HARIAN</div>
+        <div class="menu-btn outline" onclick="routeTo('workSheet')">
+          <div class="btn-wrap">
+            <div class="btn-icon"><i class="bi bi-journal-richtext"></i></div>
+            <div class="btn-info">
+              <div class="btn-title">Buat Kertas Kerja</div>
+              <div class="btn-desc">Laporan Patrol, Project, & Incident</div>
+            </div>
+          </div>
+          <i class="bi bi-arrow-right"></i>
+        </div>
+
+        <div class="menu-label mt-4">EVALUASI KINERJA</div>
+        <div class="menu-btn outline" onclick="routeTo('kpi2026')">
+          <div class="btn-wrap">
+            <div class="btn-icon"><i class="bi bi-clipboard-data text-primary"></i></div>
+            <div class="btn-info">
+              <div class="btn-title">Evaluasi KPI 2026</div>
+              <div class="btn-desc">Pelaporan Kinerja Tahun 2026</div>
+            </div>
+          </div>
+          <i class="bi bi-arrow-right"></i>
+        </div>
+
+        <div class="menu-btn outline" onclick="routeTo('single')">
+          <div class="btn-wrap">
+            <div class="btn-icon"><i class="bi bi-clipboard-data text-success"></i></div>
+            <div class="btn-info">
+              <div class="btn-title">Evaluasi KPI 2025</div>
+              <div class="btn-desc">Pelaporan Kinerja Tahun 2025</div>
+            </div>
+          </div>
+          <i class="bi bi-arrow-right"></i>
+        </div>
+
+        <div class="menu-label">MASIH BINGUNG CARANYA?</div>
+        <div class="menu-btn outline" onclick="routeTo('guide')">
+          <div class="btn-wrap">
+            <div class="btn-icon"><i class="bi bi-book text-primary"></i></div>
+            <div class="btn-info">
+              <div class="btn-title">Panduan</div>
+              <div class="btn-desc">Cara penggunaan sistem</div>
+            </div>
+          </div>
+          <i class="bi bi-arrow-right text-muted"></i>
+        </div>
+
+        <div class="landing-footer">Dibuat dengan ❤️ oleh QM Unit - 2026</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container my-4 my-md-5" id="innerPages">
+
+    <!-- GUIDE (5) lebih detail + icon) -->
+    <section id="pageGuide" class="page">
+      <div class="guide-hero mb-3">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <div>
+            <h3 class="fw-black mb-1" style="font-weight:900;">
+              <i class="bi bi-book-half me-2 text-primary"></i>Panduan Penggunaan
+            </h3>
+            <div class="text-muted" style="font-weight:600;">
+              Ikuti langkah singkat di bawah agar input & cetak dokumen lebih rapi.
+            </div>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <span class="guide-chip"><i class="bi bi-shield-check text-success"></i> Bukti wajib</span>
+            <span class="guide-chip"><i class="bi bi-printer text-primary"></i> Siap print A4</span>
+            <span class="guide-chip"><i class="bi bi-moon-stars text-dark"></i> Dark mode</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="cardx">
+            <div class="cardx-h">
+              <div class="fw-bold text-primary"><i class="bi bi-file-earmark-text me-2"></i>Kertas Kerja</div>
+              <span class="badge bg-light text-dark border">Harian / Insidental</span>
+            </div>
+            <div class="cardx-b">
+              <div class="guide-step">
+                <div class="step-ico"><i class="bi bi-person-badge"></i></div>
+                <div>
+                  <p class="step-title">1) Pilih identitas</p>
+                  <p class="step-desc">Nama, NIK, dan jabatan terisi otomatis. Jika memilih “Lainnya”, ketik nama manual.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="step-ico"><i class="bi bi-card-text"></i></div>
+                <div>
+                  <p class="step-title">2) Isi detail pelaksanaan</p>
+                  <p class="step-desc">Lengkapi judul, tanggal, jenis, dan lokasi (jika “Lainnya”, isi lokasi manual).</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="step-ico"><i class="bi bi-camera"></i></div>
+                <div>
+                  <p class="step-title">3) Upload bukti minimal 1</p>
+                  <p class="step-desc">Setiap file bukti yang diupload wajib ada keterangan; format hanya JPG/PNG.</p>
+                </div>
+              </div>
+              <div class="guide-step mb-0">
+                <div class="step-ico"><i class="bi bi-printer"></i></div>
+                <div>
+                  <p class="step-title">4) Preview & Print</p>
+                  <p class="step-desc">Klik “Preview & Print” lalu “Print / Save as PDF” agar layout A4 rapi.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="cardx">
+            <div class="cardx-h">
+              <div class="fw-bold text-success"><i class="bi bi-clipboard-check me-2"></i>Evaluasi KPI</div>
+              <span class="badge bg-light text-dark border">2025 / 2026</span>
+            </div>
+            <div class="cardx-b">
+              <div class="guide-step">
+                <div class="step-ico" style="background:rgba(0,166,81,0.12);border-color:rgba(0,166,81,0.18);color:var(--mrt-green);">
+                  <i class="bi bi-calendar2-week"></i>
+                </div>
+                <div>
+                  <p class="step-title">1) Pilih tahun & item KPI</p>
+                  <p class="step-desc">Masuk menu KPI 2025 atau KPI 2026, lalu pilih nama dan item KPI yang akan dibuktikan.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="step-ico" style="background:rgba(0,166,81,0.12);border-color:rgba(0,166,81,0.18);color:var(--mrt-green);">
+                  <i class="bi bi-input-cursor-text"></i>
+                </div>
+                <div>
+                  <p class="step-title">2) Isi realisasi setiap KR</p>
+                  <p class="step-desc">Isi semua realisasi. Untuk KPI tertentu, nilai bisa dibatasi (mis. skala 0–5).</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="step-ico" style="background:rgba(0,166,81,0.12);border-color:rgba(0,166,81,0.18);color:var(--mrt-green);">
+                  <i class="bi bi-paperclip"></i>
+                </div>
+                <div>
+                  <p class="step-title">3) Upload bukti + keterangan (wajib)</p>
+                  <p class="step-desc">Bukti utama wajib + keterangan wajib. Bukti tambahan opsional, tetapi jika upload wajib ada keterangan.</p>
+                </div>
+              </div>
+              <div class="guide-step mb-0">
+                <div class="step-ico" style="background:rgba(0,166,81,0.12);border-color:rgba(0,166,81,0.18);color:var(--mrt-green);">
+                  <i class="bi bi-pen"></i>
+                </div>
+                <div>
+                  <p class="step-title">4) Centang pernyataan + TTD</p>
+                  <p class="step-desc">Centang pernyataan kebenaran data, upload TTD, lalu hitung dan cetak PDF.</p>
+                </div>
+              </div>
+
+              <div class="alert alert-light border mt-3 mb-0 small">
+                <div class="fw-bold mb-1"><i class="bi bi-lightbulb me-2 text-warning"></i>Tips agar print rapi</div>
+                Gunakan Chrome/Edge → Print → Paper A4 → Margin default → “Background graphics” aktif.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORKSHEET -->
+    <section id="pageWorkSheet" class="page">
+      <div class="cardx">
+        <div class="cardx-h">
+          <h5 class="text-primary m-0" style="font-weight:900;"><i class="bi bi-file-earmark-text me-2"></i>Formulir Kertas Kerja</h5>
+          <span class="badge bg-light text-dark border">Input Data</span>
+        </div>
+
+        <div class="cardx-b">
+          <form id="wsForm">
+            <div class="row g-3 mb-3">
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Nama <span class="text-danger">*</span></label>
+                <select class="form-select" id="ws_nama" onchange="ws_handleNameChange()" required>
+                  <option value="" selected disabled>-- Pilih Nama --</option>
+                </select>
+                <input type="text" class="form-control mt-2" id="ws_nama_custom" placeholder="Lainnya: ketik nama..." style="display:none;">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label small text-muted">NIK</label>
+                <input type="text" class="form-control bg-light" id="ws_nik" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted">Jabatan</label>
+                <input type="text" class="form-control bg-light" id="ws_jabatan" readonly>
+              </div>
+            </div>
+
+            <div class="p-3 bg-light rounded border mb-3">
+              <h6 class="fw-bold mb-3 text-primary">Detail Pelaksanaan</h6>
+              <div class="row g-3">
+                <div class="col-md-8">
+                  <label class="form-label fw-bold">Judul Kegiatan <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="ws_judul" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-bold">Tanggal <span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="ws_tanggal" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Jenis</label>
+                  <select class="form-select" id="ws_jenis">
+                    <option>5R Patrol</option>
+                    <option>Project Monitoring</option>
+                    <option>Project Evaluation</option>
+                    <option>Incident Report</option>
+                    <option>Lainnya</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Lokasi</label>
+                  <select class="form-select" id="ws_lokasiSelect" onchange="ws_handleLocationChange()">
+                    <option>Wisma Nusantara</option>
+                    <option>Transport Hub</option>
+                    <option>Depo Lebak Bulus</option>
+                    <option value="Lainnya">Lainnya...</option>
+                  </select>
+                  <input type="text" class="form-control mt-2" id="ws_lokasiInput" style="display:none;" placeholder="Isi lokasi...">
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Deskripsi</label>
+              <div class="rich-editor-container">
+                <div class="editor-toolbar">
+                  <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+                </div>
+                <div id="ws_deskripsi" class="editor-content" contenteditable="true" placeholder="Tulis deskripsi..."></div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Catatan</label>
+              <div class="rich-editor-container">
+                <div class="editor-toolbar">
+                  <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+                </div>
+                <div id="ws_catatan" class="editor-content" contenteditable="true" placeholder="Tulis catatan..."></div>
+              </div>
+            </div>
+
+            <!-- Bukti: wajib 1 file + 1 keterangan -->
+            <div class="mb-3 p-3 border rounded bg-light">
+              <label class="form-label fw-bold">Bukti (Wajib 1) <span class="text-danger">*</span></label>
+              <div id="ws_eviWrap" class="d-flex flex-column gap-2">
+                <div class="p-2 border rounded bg-white">
+                  <div class="fw-bold mb-2">Bukti 1</div>
+                  <input type="file" class="form-control mb-2 ws_evi_file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
+                  <div class="rich-editor-container">
+                    <div class="editor-toolbar">
+                      <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+                      <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+                      <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+                      <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+                    </div>
+                    <div class="editor-content ws_evi_note" contenteditable="true" placeholder="Keterangan bukti..."></div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="ws_addEvidence()">+ Tambah Bukti Lainnya</button>
+            </div>
+
+            <div class="p-3 border rounded mb-3" style="background:rgba(239, 246, 255, 0.5);">
+              <h6 class="fw-bold mb-3">Validasi Atasan</h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Nama Atasan <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="ws_nama_atasan" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Jabatan Atasan <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="ws_jabatan_atasan" required>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow-sm" onclick="ws_generate()">
+              <i class="bi bi-printer me-2"></i>Preview & Print
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORKSHEET REPORT -->
+    <section id="pageWorkSheetReport" class="page">
+      <div class="d-flex justify-content-between mb-3 no-print shadow-sm p-3 rounded border bg-white align-items-center">
+        <h5 class="m-0 fw-bold text-primary">Preview Kertas Kerja</h5>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-dark" onclick="routeTo('workSheet')">Kembali</button>
+          <button class="btn btn-sm btn-primary fw-bold" onclick="printPage('pageWorkSheetReport')">Print / Save as PDF</button>
+        </div>
+      </div>
+
+      <div class="cardx" id="wsReportContent">
+        <div class="cardx-b p-4 p-md-5">
+          <h4 class="text-primary fw-bold mb-4 text-uppercase">Kertas Kerja</h4>
+
+          <div class="row g-3 align-items-end mb-4">
+            <div class="col-md-8">
+              <table class="table table-borderless table-sm small mb-0">
+                <tr><td class="text-muted w-25">Nama</td><td class="fw-bold fs-6" id="wr_nama"></td></tr>
+                <tr><td class="text-muted">NIK</td><td id="wr_nik"></td></tr>
+                <tr><td class="text-muted">Jabatan</td><td id="wr_jabatan"></td></tr>
+              </table>
+            </div>
+            <div class="col-md-4">
+              <div class="border rounded p-3 bg-light">
+                <small class="text-muted fw-bold">TANGGAL</small>
+                <div class="fw-bold fs-5" id="wr_tanggal"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="row g-3">
+              <div class="col-md-8">
+                <div class="text-muted small mb-1">Judul Kegiatan</div>
+                <div class="fw-bold" id="wr_judul"></div>
+              </div>
+              <div class="col-md-4">
+                <div class="text-muted small mb-1">Lokasi</div>
+                <div class="fw-bold" id="wr_lokasi"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Deskripsi</h6>
+            <div class="p-3 border rounded bg-light" id="wr_deskripsi"></div>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Catatan</h6>
+            <div class="p-3 border rounded bg-light" id="wr_catatan"></div>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Lampiran Bukti</h6>
+            <div class="row g-3" id="wr_photos"></div>
+          </div>
+
+          <div class="mt-4">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Validasi</h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="p-3 border rounded">
+                  <div class="text-muted small">Diperiksa Oleh</div>
+                  <div class="fw-bold" id="wr_atasan_nama"></div>
+                  <div class="small text-muted" id="wr_atasan_jabatan"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 border rounded">
+                  <div class="text-muted small">Dibuat Oleh</div>
+                  <div class="fw-bold" id="wr_pelaksana_nama"></div>
+                  <div class="small text-muted" id="wr_pelaksana_jabatan"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 small text-muted">Jakarta, <span id="wr_date"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPI 2025 -->
+    <section id="pageSingle" class="page">
+      <div class="cardx">
+        <div class="cardx-h">
+          <h5 class="text-primary m-0" style="font-weight:900;"><i class="bi bi-clipboard-data me-2"></i>Evaluasi KPI 2025</h5>
+        </div>
+
+        <div class="cardx-b">
+          <form id="singleForm">
+            <div class="row g-3 mb-3">
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Nama Karyawan</label>
+                <select class="form-select" id="s_nama" onchange="single_handleNameChange()" required>
+                  <option value="">-- Pilih --</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted">NIK</label>
+                <input type="text" class="form-control bg-light" id="s_nik" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted">Jabatan</label>
+                <input type="text" class="form-control bg-light" id="s_jabatan" readonly>
+              </div>
+            </div>
+
+            <div class="mb-3 border p-3 rounded bg-light">
+              <label class="form-label fw-bold">Pilih Item KPI 2025</label>
+              <select class="form-select" id="s_obj" onchange="single_renderKeyResults()" required>
+                <option value="">-- Pilih Nama Terlebih Dahulu --</option>
+              </select>
+            </div>
+
+            <div id="single_dynamic" style="display:none;">
+              <div class="alert alert-primary py-2 small mb-3">
+                <strong>Formula:</strong> <span id="s_formula"></span>
+              </div>
+
+              <h6 class="fw-bold mb-2">Input Realisasi KR</h6>
+              <div id="s_krContainer" class="mb-3 gap-3 d-flex flex-column"></div>
+
+              <div class="mb-3 p-3 border rounded">
+                <label class="fw-bold form-label">Upload Bukti Utama <span class="text-danger">*</span></label>
+                <input type="file" class="form-control mb-2" id="s_buktiMain" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
+
+                <div class="rich-editor-container">
+                  <div class="editor-toolbar">
+                    <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+                    <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+                    <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+                    <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+                  </div>
+                  <div id="s_editor_main" class="editor-content" contenteditable="true" placeholder="Keterangan bukti utama..."></div>
+                </div>
+
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                  onclick="addExtraEvidence('s_extraWrap','s_extra_file','s_extra_note')">+ Tambah Bukti Lainnya</button>
+                <div id="s_extraWrap" class="mt-2 d-flex flex-column gap-2"></div>
+              </div>
+
+              <div class="form-check mb-3 p-3 border rounded bg-light-subtle">
+                <input class="form-check-input" type="checkbox" id="s_declare" required style="transform: scale(1.2);">
+                <label class="form-check-label fw-bold ms-2 pt-1">Saya menyatakan data yang diisi adalah BENAR.</label>
+              </div>
+
+              <div class="mb-3">
+                <label class="fw-bold form-label">Upload Tanda Tangan Digital <span class="text-danger">*</span></label>
+                <input type="file" class="form-control" id="s_ttd" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
+              </div>
+
+              <button type="button" class="btn btn-success w-100 py-3 rounded-3 fw-bold fs-5 shadow-sm" onclick="single_calculate()">
+                <i class="bi bi-calculator me-2"></i>Hitung & Lihat Hasil
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPI 2026 -->
+    <section id="pageKpi2026" class="page">
+      <div class="cardx">
+        <div class="cardx-h">
+          <h5 class="text-primary m-0" style="font-weight:900;"><i class="bi bi-rocket-takeoff me-2"></i>Evaluasi KPI 2026</h5>
+        </div>
+
+        <div class="cardx-b">
+          <form id="kpi2026Form">
+            <div class="row g-3 mb-3">
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Nama Karyawan</label>
+                <select class="form-select" id="k26_nama" onchange="k26_handleNameChange()" required>
+                  <option value="">-- Pilih --</option>
+                </select>
+              </div>
+              <div class="col-md-6"><input class="form-control bg-light" id="k26_nik" readonly placeholder="NIK"></div>
+              <div class="col-md-6"><input class="form-control bg-light" id="k26_jabatan" readonly placeholder="Jabatan"></div>
+            </div>
+
+            <div class="mb-3 border p-3 rounded bg-light">
+              <label class="form-label fw-bold">Pilih Item KPI 2026</label>
+              <select class="form-select" id="k26_obj" onchange="k26_renderKeyResults()" required>
+                <option value="">-- Pilih Nama Terlebih Dahulu --</option>
+              </select>
+            </div>
+
+            <div id="k26_dynamic" style="display:none;">
+              <div class="alert alert-info py-2 small mb-3"><strong>Formula:</strong> <span id="k26_formula"></span></div>
+
+              <h6 class="fw-bold mb-2">Input Key Result (KR)</h6>
+              <div id="k26_krContainer" class="mb-3 gap-3 d-flex flex-column"></div>
+
+              <div class="mb-3 p-3 border rounded">
+                <label class="fw-bold form-label">Upload Bukti Utama <span class="text-danger">*</span></label>
+                <input type="file" class="form-control mb-2" id="k26_buktiMain" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
+
+                <div class="rich-editor-container">
+                  <div class="editor-toolbar">
+                    <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+                    <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+                    <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+                    <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+                  </div>
+                  <div id="k26_editor_main" class="editor-content" contenteditable="true" placeholder="Keterangan bukti utama..."></div>
+                </div>
+
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2"
+                  onclick="addExtraEvidence('k26_extraWrap','k26_extra_file','k26_extra_note')">+ Tambah Bukti Lainnya</button>
+                <div id="k26_extraWrap" class="mt-2 d-flex flex-column gap-2"></div>
+              </div>
+
+              <div class="form-check mb-3 p-3 border rounded bg-light-subtle">
+                <input class="form-check-input" type="checkbox" id="k26_declare" required style="transform: scale(1.2);">
+                <label class="form-check-label fw-bold ms-2 pt-1">Saya menyatakan data yang diisi adalah BENAR.</label>
+              </div>
+
+              <div class="mb-3">
+                <label class="fw-bold form-label">Upload Tanda Tangan Digital <span class="text-danger">*</span></label>
+                <input type="file" class="form-control" id="k26_ttd" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
+              </div>
+
+              <button type="button" class="btn btn-primary w-100 py-3 rounded-3 fw-bold fs-5 shadow-sm" onclick="k26_calculate()">
+                <i class="bi bi-calculator me-2"></i>Hitung & Lihat Hasil 2026
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPI REPORT -->
+    <section id="pageSingleReport" class="page">
+      <div class="d-flex justify-content-between mb-3 no-print shadow-sm p-3 rounded border bg-white align-items-center">
+        <h5 class="m-0 fw-bold text-success">Hasil Perhitungan KPI</h5>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-dark" onclick="routeTo('landing')">Home</button>
+          <button class="btn btn-sm btn-primary fw-bold" onclick="printPage('pageSingleReport')">Print / Save as PDF</button>
+        </div>
+      </div>
+
+      <div class="cardx" id="singleReportContent">
+        <div class="cardx-b p-4 p-md-5">
+          <h4 class="text-primary fw-bold mb-4 text-uppercase">BUKTI PENILAIAN KPI</h4>
+
+          <div class="row mt-3 mb-4 align-items-end">
+            <div class="col-md-8 col-8">
+              <table class="table table-borderless table-sm small mb-0">
+                <tr><td class="text-muted w-25">Nama</td><td class="fw-bold fs-6" id="sr_nama"></td></tr>
+                <tr><td class="text-muted">Jabatan</td><td id="sr_jabatan_kpi"></td></tr>
+                <tr><td class="text-muted">Item KPI</td><td class="fw-bold text-primary fs-6" id="sr_obj"></td></tr>
+              </table>
+            </div>
+
+            <div class="col-md-4 col-4 text-center">
+              <div class="border rounded p-3 bg-light" style="border-color:#bbf7d0 !important; background:#f0fdf4 !important;">
+                <small class="text-muted fw-bold">SKOR AKHIR</small>
+                <h1 class="m-0 fw-bold text-success" style="font-size:3.2rem;" id="sr_sf">0</h1>
+              </div>
+              <div class="small text-muted mt-1" style="font-weight:700;">Nilai perhitungan: <span id="sr_totalScore">0</span></div>
+            </div>
+          </div>
+
+          <h6 class="fw-bold border-bottom pb-2 mb-3">Rincian Perhitungan</h6>
+          <div class="table-responsive-mobile">
+            <table class="table table-bordered table-sm text-center align-middle small mb-4">
+              <thead class="table-light fw-bold">
+                <tr>
+                  <th>Key Result</th>
+                  <th width="15%">Target</th>
+                  <th width="15%">Realisasi</th>
+                  <th width="12%">Bobot KR</th>
+                  <th width="12%">Skor KR</th>
+                </tr>
+              </thead>
+              <tbody id="sr_rows"></tbody>
+              <tfoot class="fw-bold bg-light" style="border-top:2px solid #e2e8f0;">
+                <tr>
+                  <td colspan="3" class="text-end pe-3">TOTAL</td>
+                  <td id="sr_totalBobot"></td>
+                  <td id="sr_totalScoreFoot" class="text-primary"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="page-break">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Lampiran Bukti</h6>
+            <div id="sr_evi" class="mt-3 p-3 border rounded bg-light"></div>
+
+            <div class="row mt-5 pt-4">
+              <div class="col-md-6 offset-md-6 text-center">
+                <p class="mb-2">Jakarta, <span id="sr_date"></span></p>
+                <p class="mb-1">Dibuat Oleh,</p>
+                <img id="sr_ttdImg" style="height:80px; width:auto; display:block; margin:0 auto; object-fit:contain;">
+                <p class="fw-bold text-decoration-underline mt-2 text-uppercase mb-0" id="sr_sigNama"></p>
+                <p class="small text-muted" id="sr_sigJabatan"></p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FOOTER BAR (2) hanya muncul selain landing -->
+  <div class="footer-bar no-print" id="footerBar">
+    <a class="footer-link email" href="mailto:arizki@jakartamrt.co.id" target="_blank" rel="noopener">
+      <i class="bi bi-envelope-fill"></i> Hubungi via Email
+    </a>
+    <a class="footer-link wa" href="https://wa.me/6281316997225" target="_blank" rel="noopener">
+      <i class="bi bi-whatsapp"></i> Hubungi via WhatsApp
+    </a>
+  </div>
+
+<script>
+/* ===================== THEME + EDITOR ===================== */
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const icon = document.getElementById('darkModeIcon');
+  if (document.body.classList.contains('dark-mode')) {
+    icon.classList.remove('bi-moon-stars-fill');
+    icon.classList.add('bi-sun-fill');
+  } else {
+    icon.classList.remove('bi-sun-fill');
+    icon.classList.add('bi-moon-stars-fill');
+  }
+}
+function execCmd(cmd) { document.execCommand(cmd, false, null); }
+
+/* ===================== ROUTING + FOOTER RULES (2) ===================== */
+function shouldShowFooter(pageId){
+  const allowed = new Set([
+    "guide",
+    "workSheet", "workSheetReport",
+    "single", "singleReport",
+    "kpi2026"
+  ]);
+  return allowed.has(pageId);
+}
+
+function routeTo(pageId) {
+  if (pageId === "landingHome") pageId = "landing";
+
+  const landing = document.getElementById("pageLanding");
+  const nav = document.getElementById("innerNav");
+  const footer = document.getElementById("footerBar");
+  const innerPages = document.getElementById("innerPages");
+
+  document.querySelectorAll(".page").forEach(el => {
+    el.classList.remove("active", "print-active");
+    el.style.display = "none";
+  });
+
+  const pageMap = {
+    guide: "pageGuide",
+    workSheet: "pageWorkSheet",
+    workSheetReport: "pageWorkSheetReport",
+    single: "pageSingle",
+    singleReport: "pageSingleReport",
+    kpi2026: "pageKpi2026"
+  };
+
+  if (pageId === "landing") {
+    landing.classList.add("active");
+    nav.classList.remove("show");
+
+    document.body.classList.add("on-landing");
+    if (innerPages) innerPages.style.display = "none";
+
+    footer.classList.remove("show");
+    document.body.classList.remove("footer-visible");
+
+    window.scrollTo(0, 0);
+    return;
+  }
+
+  landing.classList.remove("active");
+  nav.classList.add("show");
+
+  document.body.classList.remove("on-landing");
+  if (innerPages) innerPages.style.display = "block";
+
+  const targetId = pageMap[pageId];
+  const target = targetId ? document.getElementById(targetId) : null;
+
+  if (target) {
+    target.style.display = "block";
+    setTimeout(() => target.classList.add("active"), 10);
+  } else {
+    alert("Halaman tidak ditemukan: " + pageId);
+  }
+
+  const showFooter = shouldShowFooter(pageId);
+  footer.classList.toggle("show", showFooter);
+  document.body.classList.toggle("footer-visible", showFooter);
+
+  window.scrollTo(0, 0);
+}
+
+function printPage(sectionId) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("print-active"));
+  const sec = document.getElementById(sectionId);
+  if (!sec) return alert("Halaman print tidak ditemukan.");
+  sec.classList.add("print-active");
+
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => sec.classList.remove("print-active"), 300);
+  }, 80);
+}
+
+/* ===================== FILE VALIDATION (JPG/PNG ONLY) ===================== */
+function isAllowedImage(file) {
+  if (!file) return false;
+  const okTypes = ["image/jpeg", "image/png"];
+  const name = (file.name || "").toLowerCase();
+  const extOk = name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png");
+  return okTypes.includes(file.type) && extOk;
+}
+document.addEventListener("change", (e) => {
+  const el = e.target;
+  if (!el || el.type !== "file") return;
+  const f = el.files && el.files[0] ? el.files[0] : null;
+  if (!f) return;
+  if (!isAllowedImage(f)) {
+    el.value = "";
+    alert("File harus format JPG atau PNG.");
+  }
+});
+
+function plainTextFromHtml(el){
+  if(!el) return "";
+  return (el.innerText || "").replace(/\u00A0/g," ").trim();
+}
+
+/* ===================== DATA: KARYAWAN + LEADER (6) ===================== */
+const employees = [
+  { name: "M. Ardhan Rafsanjani", title: "General Affairs Department Head", nik: "217051224" },
+  { name: "Maya Satih Kanteyan", title: "Site Office and Head Office Facility Operation Section Head", nik: "218022377" },
+  { name: "Waziruddin", title: "Depot Office Facility Operation Section Head", nik: "10077" },
+  { name: "Rizki Aziz Radyantama", title: "Office Quality Facility Specialist", nik: "10395" },
+  { name: "Annisa Mayangsari", title: "Site Office and Head Office Facility Operation Specialist", nik: "10003" },
+  { name: "Rakhmat", title: "Site Office and Head Office Facility Operation Specialist", nik: "213031040" },
+  { name: "Agung Prasetyo Wicaksono", title: "Site Office and Head Office Facility Operation Specialist", nik: "218111585" },
+  { name: "Siti Zahratus Solihat", title: "Site Office and Head Office Facility Operation Specialist", nik: "10025" },
+  { name: "Abdul Ajid", title: "Depot Office Facility Operation Specialist", nik: "217111362" },
+  { name: "Dharisa Inayah Ramadhan", title: "Depot Office Facility Operation Specialist", nik: "10523" }
+];
+// Leaders hanya untuk Kertas Kerja
+const outsourcing = [
+  { name: "Iyan Royyani", title: "Leader", nik: "-" },
+  { name: "Hidayatullah", title: "Leader", nik: "-" },
+  { name: "Indriati Kusuma Dewi", title: "Leader", nik: "-" }
+];
+
+/* ===================== KPI MODE RULES (1) perhitungan ===================== */
+const KPI_MODE = {
+  SCALE5: new Set([
+    "Tingkat pemenuhan IDP",
+    "Indeks Knowledge Management"
+  ]),
+  CAP100: new Set([
+    "Indeks GRC",
+    "Indeks Kepuasan Stakeholder",
+    "Penyelesaian Temuan Audit"
+  ])
+};
+
+function getKpiMode(kpiName){
+  if (KPI_MODE.SCALE5.has(kpiName)) return "SCALE5";
+  if (KPI_MODE.CAP100.has(kpiName)) return "CAP100";
+  return "UNCAPPED";
+}
+// mapping SF ala tabel (80/90/100/110/120) untuk KPI non-SCALE5
+function computeSf(finalRatio){
+  // Snap supaya kasus 0.999999999 / 1.000000001 tidak loncat level
+  const r = Math.round(finalRatio * 10000) / 10000; // 4 desimal
+
+  if (r >= 1.2) return 120;
+  if (r > 1.0)  return 110;
+  if (r >= 1.0) return 100;
+  if (r >= 0.8) return 90;
+  return 80;
+}
+
+
+/* ===================== PASTE KPI DATA HERE (FULL) ===================== */
+/* (1) Tempel persis dari GASSTerus-v.1 Anda (full, tanpa mengubah format):
+   - employeeWeights2025
+   - kpiData2025
+   - kpiData2026
+   - employeeWeights2026
+*/
+const employeeWeights2025 = {
+  "M. Ardhan Rafsanjani": { "Terlaksananya kegiatan budget controlling": 10, "Tercapainya success rate pengelolaan layanan umum": 15, "Jumlah proyek atau inovasi layanan": 10, "Pencapaian Pembuatan SOP dan Instruksi Kerja Departemen": 15, "Persetujuan alternatif lokasi kerja kantor pusat PT MRT Jakarta (Perseroda)": 15, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "GRC Index": 2.5, "Indeks Kepuasan Stakeholder": 2.5, "Indeks Penyelesaian Audit": 2.5, "Jumlah permintaan perbaikan yang diselesaikan tepat waktu": 7.5, "Petty Cash Handling": 7.5, "Tercapainya Akurasi dan Ketepatan Waktu Pembayaran Tagihan Area SOHO dan Depo Lebak Bulus": 7.5 },
+  "Rizki Aziz Radyantama": { "Tercapainya success rate pengelolaan layanan umum": 10, "Jumlah proyek atau inovasi layanan": 12.5, "Pencapaian Pembuatan SOP dan Instruksi Kerja Departemen": 12.5, "Persetujuan alternatif lokasi kerja kantor pusat PT MRT Jakarta (Perseroda)": 20, "Kegiatan Daur Ulang Limbah Seragam": 20, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "GRC Index": 10, "Indeks Kepuasan Stakeholder": 15, "Indeks Penyelesaian Audit": 2.5 },
+  "Waziruddin": { "Terlaksananya kegiatan budget controlling": 5, "Tercapainya success rate pengelolaan layanan umum": 15, "Jumlah proyek atau inovasi layanan": 10, "Jumlah permintaan perbaikan yang diselesaikan tepat waktu": 10, "Tercapainya Akurasi dan Ketepatan Waktu Pembayaran Tagihan Area Depo Lebak Bulus": 10, "Petty Cash Handling": 10, "Pengelolaan Pelayanan Tenaga Alih Daya": 10, "Pencapaian Pembuatan SOP dan Instruksi Kerja Departemen": 10, "Persetujuan alternatif lokasi kerja kantor pusat PT MRT Jakarta (Perseroda)": 10, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "GRC Index": 10, "Indeks Kepuasan Stakeholder": 2.5, "Indeks Penyelesaian Audit": 2.5, "Pengelolaan Fasilitas Kantor": 10 },
+  "Dharisa Inayah Ramadhan": { "Terlaksananya kegiatan budget controlling": 10, "Tercapainya success rate pengelolaan layanan umum": 10, "Jumlah proyek atau inovasi layanan": 10, "Petty Cash Handling": 15, "Tercapainya Akurasi dan Ketepatan Waktu Pembayaran Tagihan Area Depo Lebak Bulus": 10, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Pengelolaan Fasilitas Kantor": 10, "Indeks Kepuasan Stakeholder": 2.5, "Indeks Penyelesaian Audit": 2.5, "Kegiatan Daur Ulang Limbah Seragam": 10, "Pencapaian Pembuatan SOP dan Instruksi Kerja Departemen": 5, "Pengelolaan Pelayanan Tenaga Alih Daya": 10 },
+  "Abdul Ajid": { "Terlaksananya kegiatan budget controlling": 5, "Tercapainya success rate pengelolaan layanan umum": 10, "Jumlah proyek atau inovasi layanan": 10, "Jumlah permintaan perbaikan yang diselesaikan tepat waktu": 12.5, "Petty Cash Handling": 7.5, "Tercapainya Akurasi dan Ketepatan Waktu Pembayaran Tagihan Area Depo Lebak Bulus": 10, "Pencapaian Pembuatan SOP dan Instruksi Kerja Departemen": 10, "Persetujuan alternatif lokasi kerja kantor pusat PT MRT Jakarta (Perseroda)": 7.5, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Pengelolaan Fasilitas Kantor": 10, "Indeks Kepuasan Stakeholder": 2.5, "Indeks Penyelesaian Audit": 2.5, "Pengelolaan Pelayanan Tenaga Alih Daya": 7.5 },
+  "Maya Satih Kanteyan": { "Terlaksananya kegiatan budget controlling": 10, "Tercapainya success rate pengelolaan layanan umum": 10, "Jumlah proyek atau inovasi layanan": 7.5, "Jumlah permintaan perbaikan yang diselesaikan tepat waktu": 10, "Petty Cash Handling": 10, "Tercapainya Akurasi dan Ketepatan Waktu Pembayaran Tagihan Area SOHO dan Depo Lebak Bulus": 10, "Pengelolaan Pelayanan Tenaga Alih Daya": 10, "Pencapaian Pembuatan SOP dan Instruksi Kerja Departemen": 7.5, "Persetujuan alternatif lokasi kerja kantor pusat PT MRT Jakarta (Perseroda)": 15, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Pengelolaan Fasilitas Kantor": 10, "Indeks Kepuasan Stakeholder": 2.5, "Indeks Penyelesaian Audit": 2.5 },
+  "Siti Zahratus Solihat": { "Terlaksananya kegiatan budget controlling": 15, "Tercapainya success rate pengelolaan layanan umum": 10, "Jumlah proyek atau inovasi layanan": 10, "Petty Cash Handling": 15, "Tercapainya Akurasi dan Ketepatan Waktu Pembayaran Tagihan Area SOHO dan Depo Lebak Bulus": 12.5, "Pengelolaan Pelayanan Tenaga Alih Daya": 15, "Pencapaian Pembuatan SOP dan Instruksi Kerja Departemen": 12.5, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Indeks Kepuasan Stakeholder": 2.5, "Indeks Penyelesaian Audit": 2.5 },
+  "Annisa Mayangsari": { "Terlaksananya kegiatan budget controlling": 10, "Tercapainya success rate pengelolaan layanan umum": 12.5, "Jumlah proyek atau inovasi layanan": 12.5, "Petty Cash Handling": 15, "Tercapainya Akurasi dan Ketepatan Waktu Pembayaran Tagihan Area SOHO": 10, "Pengelolaan Pelayanan Tenaga Alih Daya": 10, "Pencapaian Pembuatan SOP dan Instruksi Kerja Departemen": 10, "Kegiatan Daur Ulang Limbah Seragam": 5, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "GRC Index": 10, "Indeks Kepuasan Stakeholder": 2.5, "Indeks Penyelesaian Audit": 2.5, "Pengelolaan Fasilitas Kantor": 10 },
+  "Agung Prasetyo Wicaksono": { "Terlaksananya kegiatan budget controlling": 5, "Tercapainya success rate pengelolaan layanan umum": 10, "Jumlah proyek atau inovasi layanan": 10, "Jumlah permintaan perbaikan yang diselesaikan tepat waktu": 12.5, "Tercapainya Akurasi dan Ketepatan Waktu Pembayaran Tagihan Area SOHO": 10, "Petty Cash Handling": 7.5, "Pencapaian Pembuatan SOP dan Instruksi Kerja Departemen": 10, "Pengelolaan Pelayanan Tenaga Alih Daya": 7.5, "Persetujuan alternatif lokasi kerja kantor pusat PT MRT Jakarta (Perseroda)": 7.5, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Pengelolaan Fasilitas Kantor": 10, "Indeks Kepuasan Stakeholder": 2.5, "Indeks Penyelesaian Audit": 2.5 },
+  "Rakhmat": { "Terlaksananya kegiatan budget controlling": 5, "Tercapainya success rate pengelolaan layanan umum": 10, "Jumlah proyek atau inovasi layanan": 10, "Jumlah permintaan perbaikan yang diselesaikan tepat waktu": 12.5, "Tercapainya Akurasi dan Ketepatan Waktu Pembayaran Tagihan Area SOHO": 10, "Petty Cash Handling": 7.5, "Pencapaian Pembuatan SOP dan Instruksi Kerja Departemen": 10, "Pengelolaan Pelayanan Tenaga Alih Daya": 7.5, "Persetujuan alternatif lokasi kerja kantor pusat PT MRT Jakarta (Perseroda)": 7.5, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Pengelolaan Fasilitas Kantor": 10, "Indeks Kepuasan Stakeholder": 2.5, "Indeks Penyelesaian Audit": 2.5 }
+};
+
+const kpiData2025 = {
+  "Terlaksananya kegiatan budget controlling": { formula: "Realisasi jumlah kegiatan terserap berdasarkan RKA", items: [{ kr: "1. Memastikan ketersediaan anggaran untuk setiap kegiatan", target: 100, unit: "%", relativeWeight: 50 }, { kr: "2. Kegiatan reelokasi selesai max 1 bulan", target: 100, unit: "%", relativeWeight: 35 }, { kr: "3. Kegiatan terdokumentasi dan dilaporkan rutin", target: 12, unit: "Bulan", relativeWeight: 15 }] },
+  "Tercapainya success rate pengelolaan layanan umum": { formula: "Realisasi penyelesaian kebutuhan layanan umum", items: [{ kr: "1. Menyelesaikan permintaan layanan umum sesuai SLA", target: 100, unit: "%", relativeWeight: 40 }, { kr: "2. Jumlah keluhan kategori menengah/tinggi < 40%", target: 10, unit: "%", relativeWeight: 30 }, { kr: "3. 100% permintaan layanan umum tercatat", target: 100, unit: "%", relativeWeight: 30 }] },
+  "Jumlah proyek atau inovasi layanan": { formula: "Realisasi penyelesaian minimal 2 proyek atau inovasi perbaikan layanan dalam 1 tahun", items: [{ kr: "1. Memiliki minimal 1 proyek/inovasi per tahun", target: 1, unit: "Proyek", relativeWeight: 50 }, { kr: "2. Penyelesaian proyek 100%", target: 100, unit: "%", relativeWeight: 30 }, { kr: "3. Dokumentasi proyek tercatat lengkap", target: 100, unit: "%", relativeWeight: 20 }] },
+  "Jumlah permintaan perbaikan yang diselesaikan tepat waktu": { formula: "Seluruh permintaan perbaikan selesai dan tercatat 100%, serta terdokumentasi", items: [{ kr: "1. Penyelesaian permintaan memenuhi 100% SLA", target: 100, unit: "%", relativeWeight: 50 }, { kr: "2. Seluruh permintaan perbaikan tercatat 100%", target: 100, unit: "%", relativeWeight: 50 }] },
+  "Petty Cash Handling": { formula: "Realisasi pengelolaan petty cash (saldo & pengembalian)", items: [{ kr: "1. Pengajuan petty cash tercatat & terverifikasi", target: 100, unit: "%", relativeWeight: 25 }, { kr: "2. Laporan petty cash tersedia setiap bulan", target: 12, unit: "Bulan", relativeWeight: 25 }, { kr: "3. Pencairan reimbursement max 14 hari", target: 100, unit: "%", relativeWeight: 25 }, { kr: "4. Pertanggungjawaban uang muka max 7 hari", target: 100, unit: "%", relativeWeight: 25 }] },
+  "Tercapainya Akurasi dan Ketepatan Waktu Pembayaran Tagihan Area SOHO dan Depo Lebak Bulus": { formula: "Realisasi pembayaran tahun berjalan & tidak ada keterlambatan stop service", items: [{ kr: "1. 100% pembayaran pada periode berjalan", target: 100, unit: "%", relativeWeight: 30 }, { kr: "2. Laporan pembayaran periodik per bulan", target: 12, unit: "Bulan", relativeWeight: 20 }, { kr: "3. Tidak ada keterlambatan pembayaran (stop service)", target: 12, unit: "Bulan", relativeWeight: 30 }, { kr: "4. Seluruh kegiatan pembayaran terdokumentasi", target: 100, unit: "%", relativeWeight: 20 }] },
+  "Tercapainya Akurasi dan Ketepatan Waktu Pembayaran Tagihan Area SOHO": { formula: "Realisasi pembayaran tahun berjalan & tidak ada keterlambatan stop service", items: [{ kr: "1. 100% pembayaran pada periode berjalan", target: 100, unit: "%", relativeWeight: 30 }, { kr: "2. Laporan pembayaran periodik per bulan", target: 12, unit: "Bulan", relativeWeight: 20 }, { kr: "3. Tidak ada keterlambatan pembayaran (stop service)", target: 12, unit: "Bulan", relativeWeight: 30 }, { kr: "4. Seluruh kegiatan pembayaran terdokumentasi", target: 100, unit: "%", relativeWeight: 20 }] },
+  "Tercapainya Akurasi dan Ketepatan Waktu Pembayaran Tagihan Area Depo Lebak Bulus": { formula: "Realisasi pembayaran tahun berjalan & tidak ada keterlambatan stop service", items: [{ kr: "1. 100% pembayaran pada periode berjalan", target: 100, unit: "%", relativeWeight: 30 }, { kr: "2. Laporan pembayaran periodik per bulan", target: 12, unit: "Bulan", relativeWeight: 20 }, { kr: "3. Tidak ada keterlambatan pembayaran (stop service)", target: 12, unit: "Bulan", relativeWeight: 30 }, { kr: "4. Seluruh kegiatan pembayaran terdokumentasi", target: 100, unit: "%", relativeWeight: 20 }] },
+  "Pengelolaan Pelayanan Tenaga Alih Daya": { formula: "Realisasi pelaksanaan kegiatan pelatihan pada TAD", items: [{ kr: "1. 100% pelatihan TAD terlaksana", target: 100, unit: "%", relativeWeight: 40 }, { kr: "2. Dokumentasi & laporan kegiatan TAD", target: 100, unit: "%", relativeWeight: 30 }, { kr: "3. Coaching & counselling TAD", target: 1, unit: "Kali", relativeWeight: 30 }] },
+  "Pencapaian Pembuatan SOP dan Instruksi Kerja Departemen": { formula: "Pembuatan/pembaruan minimal 3 prosedur dan 4 IK", items: [{ kr: "1. Pembuatan/pembaruan min 1 prosedur", target: 1, unit: "Dokumen", relativeWeight: 30 }, { kr: "2. Pembuatan/pembaruan min 3 IK", target: 3, unit: "Dokumen", relativeWeight: 30 }, { kr: "3. Refreshment pelayanan 1x", target: 1, unit: "Kegiatan", relativeWeight: 20 }, { kr: "4. SOP dan IK terdokumentasi", target: 100, unit: "%", relativeWeight: 20 }] },
+  "Persetujuan alternatif lokasi kerja kantor pusat PT MRT Jakarta (Perseroda)": { formula: "Tersedianya kajian perpindahan kantor pusat yang disetujui", items: [{ kr: "1. Market survey kepada 3 penyedia", target: 3, unit: "Lokasi", relativeWeight: 25 }, { kr: "2. Laporan/kajian perpindahan", target: 100, unit: "%", relativeWeight: 25 }, { kr: "3. Persetujuan lokasi kantor", target: 100, unit: "%", relativeWeight: 25 }, { kr: "4. Komitmen anggaran", target: 100, unit: "%", relativeWeight: 25 }] },
+  "Kegiatan Daur Ulang Limbah Seragam": { formula: "Kegiatan pengumpulan seragam di 3 lokasi", items: [{ kr: "1. Pengumpulan seragam di 3 lokasi", target: 3, unit: "Lokasi", relativeWeight: 50 }, { kr: "2. Dokumentasi kegiatan 100%", target: 100, unit: "%", relativeWeight: 50 }] },
+  "Pengelolaan Fasilitas Kantor": { formula: "Pemenuhan permintaan dan lelang fasilitas", items: [{ kr: "1. 100% permintaan dipenuhi sesuai SLA", target: 100, unit: "%", relativeWeight: 40 }, { kr: "2. Lelang mebel minimal 1 kali/semester", target: 2, unit: "Kali", relativeWeight: 40 }, { kr: "3. Dokumentasi rutin bulanan", target: 12, unit: "Bulan", relativeWeight: 20 }] },
+  "Tingkat pemenuhan IDP": { formula: "Input skor 0–5, skor 5 = 100%", items: [{ kr: "Tingkat pemenuhan IDP (Skor 0-5)", target: 5, unit: "Skor", relativeWeight: 100 }] },
+  "Indeks Knowledge Management": { formula: "Input skor 0–5, skor 5 = 100%", items: [{ kr: "Indeks Knowledge Management (Skor 0-5)", target: 5, unit: "Skor", relativeWeight: 100 }] },
+  "GRC Index": { formula: "Input skor 0–5, skor 5 = 100%", items: [{ kr: "GRC Index (Skor 0-5)", target: 5, unit: "Skor", relativeWeight: 100 }] },
+  "Indeks Kepuasan Stakeholder": { formula: "Mencapai skor CSI di angka 4", items: [{ kr: "Skor CSI (0-5)", target: 4, unit: "Skor", relativeWeight: 100 }] },
+  "Indeks Penyelesaian Audit": { formula: "Input skor 0–5, skor 5 = 100%", items: [{ kr: "Indeks Penyelesaian Audit (0-5)", target: 5, unit: "Skor", relativeWeight: 100 }] }
+};
+
+// --- DATA KPI 2026 ---
+const kpiData2026 = {
+    "Terlaksananya kegiatan budget controlling": {
+        formula: "Realisasi jumlah kegiatan terserap berdasarkan RKA; Efisiensi anggaran; Laporan tepat waktu.",
+        items: [
+            { kr: "KR1: Tingkat realisasi penyerapan anggaran (Target 80%)", target: 80, unit: "%", relativeWeight: 40 },
+            { kr: "KR2: Cost Efficiency non subsidi ((RKA-Biaya)/RKA)*100% (Target 5%)", target: 5, unit: "%", relativeWeight: 20 },
+            { kr: "KR3: Kedisplinan pelaporan, diserahkan max tgl 15 (12 Bulan)", target: 12, unit: "Bulan", relativeWeight: 40 }
+        ]
+    },
+    "Tercapainya success rate pengelolaan layanan umum": {
+        formula: "Efektivitas Departemen GA dalam menanggapi permintaan layanan (SLA).",
+        items: [
+            { kr: "KR1: Response time dan SLA permintaan layanan terpenuhi", target: 100, unit: "%", relativeWeight: 20 },
+            { kr: "KR2: Indeks Kepuasan Pelanggan Overall (Target 80)", target: 80, unit: "Skor", relativeWeight: 30 },
+            { kr: "KR3: Indeks Kepuasan Pelanggan per Specialist (Target 80)", target: 80, unit: "Skor", relativeWeight: 30 },
+            { kr: "KR4: Zero skip request per tahun", target: 0, unit: "Kali", relativeWeight: 20 }
+        ]
+    },
+    "Indeks Kepuasan Stakeholder": {
+        formula: "Sesuai nilai korporasi",
+        items: [{ kr: "Pencapaian Indeks Kepuasan Stakeholder", target: 100, unit: "%", relativeWeight: 100 }]
+    },
+    "Jumlah Inisiatif Peningkatan Proses atau Efisiensi": {
+        formula: "Kontribusi staf dalam mengidentifikasi ide perbaikan proses kerja.",
+        items: [
+            { kr: "KR1: Mempresentasikan project charter/deck ke Kadep (Min 1)", target: 1, unit: "Dokumen", relativeWeight: 20 },
+            { kr: "KR2: Implementasi 100%", target: 100, unit: "%", relativeWeight: 30 },
+            { kr: "KR3: Dokumentasi dan laporan akhir", target: 100, unit: "%", relativeWeight: 20 },
+            { kr: "KR4: Membuat/Review SOP/IK/SE terkait (Min 1)", target: 1, unit: "Dokumen", relativeWeight: 30 }
+        ]
+    },
+    "Petty Cash Handling": {
+        formula: "Akurasi saldo dan pencatatan kas kecil.",
+        items: [
+            { kr: "KR1: Kepatuhan dokumentasi 100% (Invoice/Bon)", target: 100, unit: "%", relativeWeight: 20 },
+            { kr: "KR2: Tersedianya 100% laporan rekonsiliasi petty cash tiap bulan", target: 12, unit: "Bulan", relativeWeight: 30 },
+            { kr: "KR3: Akurasi rekonsiliasi balance", target: 100, unit: "%", relativeWeight: 30 },
+            { kr: "KR4: Tidak ada keterlambatan pengisian kembali", target: 100, unit: "%", relativeWeight: 20 }
+        ]
+    },
+    "Tingkat Kepatuhan Prosedur Keselamatan": {
+        formula: "Implementasi kebijakan K3 di lingkungan kantor.",
+        items: [
+            { kr: "KR1: Tersedianya bukti laporan inspeksi fasilitas & K3 (4 Laporan)", target: 4, unit: "Laporan", relativeWeight: 30 },
+            { kr: "KR2: Zero insiden keamanan dan keselamatan LTI", target: 0, unit: "Kasus", relativeWeight: 30 },
+            { kr: "KR3: Penyelesaian tindak lanjut audit IMS tidak sampai tahap PTP", target: 100, unit: "%", relativeWeight: 30 },
+            { kr: "KR4: Drill simulasi internal GA minimal 1x per tahun", target: 1, unit: "Kali", relativeWeight: 10 }
+        ]
+    },
+    "Pengelolaan Inventaris Aset Kantor": {
+        formula: "Keakuratan data aset kantor vs fisik di lapangan.",
+        items: [
+            { kr: "KR1: Terlaksananya kegiatan opname aset 1x", target: 1, unit: "Kali", relativeWeight: 25 },
+            { kr: "KR2: Akurasi opname > 90%", target: 90, unit: "%", relativeWeight: 25 },
+            { kr: "KR3: Tersedianya database aset GA yang dikelola & foto terbaru", target: 100, unit: "%", relativeWeight: 25 },
+            { kr: "KR4: 100% mutasi dan peminjaman barang memiliki BAST", target: 100, unit: "%", relativeWeight: 25 }
+        ]
+    },
+    "Tingkat Kesesuaian Rencana Pengadaan": {
+        formula: "Jumlah pengadaan dengan waktu sesuai RPBJ.",
+        items: [
+            { kr: "KR1: 100% pengadaan dimulai prosesnya sesuai semester di RPBJ", target: 100, unit: "%", relativeWeight: 30 },
+            { kr: "KR2: Pengadaan di luar RPBJ jumlahnya tidak mencapai > 30%", target: 30, unit: "%", relativeWeight: 30 },
+            { kr: "KR3: Pembatalan pengadaan di RPBJ dilaksanakan sesuai prosedur", target: 100, unit: "%", relativeWeight: 20 },
+            { kr: "KR4: Tidak ada penumpukan pengadaan di Q4", target: 100, unit: "%", relativeWeight: 20 }
+        ]
+    },
+    "Penyediaan Kantor Pusat PT MRT Jakarta": {
+        formula: "Tersedianya kajian perpindahan kantor pusat.",
+        items: [
+            { kr: "KR1: Terlaksananya kegiatan pengadaan vendor konsultan design", target: 100, unit: "%", relativeWeight: 25 },
+            { kr: "KR2: Tersedianya concept design fitout dan relayout WN dan TH", target: 100, unit: "%", relativeWeight: 25 },
+            { kr: "KR3: Disetujuinya design fitout dan relayout", target: 100, unit: "%", relativeWeight: 25 },
+            { kr: "KR4: Tersedianya laporan Space Planning", target: 100, unit: "%", relativeWeight: 25 }
+        ]
+    },
+    "Optimasi Perjalanan Dinas Karyawan": {
+        formula: "Development integrasi perjalanan dinas pada platform milik PT MRTJ.",
+        items: [
+            { kr: "KR1: Tersusun dan disetujuinya 1 Protokol Integrasi / Sinkronisasi Workflow", target: 1, unit: "Dokumen", relativeWeight: 40 },
+            { kr: "KR2: 100% fitur utama (Pemesanan, Approval, Budgeting) berhasil dideploy", target: 100, unit: "%", relativeWeight: 40 },
+            { kr: "KR3: 100% Dokumentasi project tercatat", target: 100, unit: "%", relativeWeight: 20 }
+        ]
+    },
+    "Tingkat pemenuhan IDP": { formula: "Realisasi pemenuhan IDP", items: [{ kr: "Realisasi IDP (Skor Max 5)", target: 5, unit: "Skor", relativeWeight: 100 }] },
+    "Indeks Knowledge Management": { formula: "Tercapainya Skor KM Index", items: [{ kr: "Skor KM (Target 4)", target: 4, unit: "Skor", relativeWeight: 100 }] },
+    "Indeks GRC": { formula: "Terselesaikannya 100% pemenuhan GRC Direktorat", items: [{ kr: "Skor GRC (Target 100%)", target: 100, unit: "%", relativeWeight: 100 }] },
+    "Penyelesaian Temuan Audit": { formula: "Terselesaikannya 100% temuan audit", items: [{ kr: "Penyelesaian Audit (Target 100%)", target: 100, unit: "%", relativeWeight: 100 }] }
+};
+
+const employeeWeights2026 = {
+    "M. Ardhan Rafsanjani": { "Terlaksananya kegiatan budget controlling": 10, "Tercapainya success rate pengelolaan layanan umum": 10, "Indeks Kepuasan Stakeholder": 2.5, "Jumlah Inisiatif Peningkatan Proses atau Efisiensi": 10, "Petty Cash Handling": 10, "Tingkat Kepatuhan Prosedur Keselamatan": 10, "Pengelolaan Inventaris Aset Kantor": 10, "Tingkat Kesesuaian Rencana Pengadaan": 7.5, "Penyediaan Kantor Pusat PT MRT Jakarta": 10, "Optimasi Perjalanan Dinas Karyawan": 10, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Indeks GRC": 2.5, "Penyelesaian Temuan Audit": 2.5 },
+    "Maya Satih Kanteyan": { "Terlaksananya kegiatan budget controlling": 10, "Tercapainya success rate pengelolaan layanan umum": 10, "Indeks Kepuasan Stakeholder": 2.5, "Jumlah Inisiatif Peningkatan Proses atau Efisiensi": 10, "Petty Cash Handling": 10, "Tingkat Kepatuhan Prosedur Keselamatan": 10, "Pengelolaan Inventaris Aset Kantor": 10, "Tingkat Kesesuaian Rencana Pengadaan": 7.5, "Penyediaan Kantor Pusat PT MRT Jakarta": 10, "Optimasi Perjalanan Dinas Karyawan": 10, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Indeks GRC": 2.5, "Penyelesaian Temuan Audit": 2.5 },
+    "Waziruddin": { "Terlaksananya kegiatan budget controlling": 10, "Tercapainya success rate pengelolaan layanan umum": 10, "Indeks Kepuasan Stakeholder": 2.5, "Jumlah Inisiatif Peningkatan Proses atau Efisiensi": 10, "Petty Cash Handling": 10, "Tingkat Kepatuhan Prosedur Keselamatan": 10, "Pengelolaan Inventaris Aset Kantor": 10, "Tingkat Kesesuaian Rencana Pengadaan": 7.5, "Penyediaan Kantor Pusat PT MRT Jakarta": 10, "Optimasi Perjalanan Dinas Karyawan": 10, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Indeks GRC": 2.5, "Penyelesaian Temuan Audit": 2.5 },
+    "Rizki Aziz Radyantama": { "Terlaksananya kegiatan budget controlling": 10, "Tercapainya success rate pengelolaan layanan umum": 10, "Indeks Kepuasan Stakeholder": 2.5, "Jumlah Inisiatif Peningkatan Proses atau Efisiensi": 12.5, "Tingkat Kepatuhan Prosedur Keselamatan": 15, "Tingkat Kesesuaian Rencana Pengadaan": 10, "Penyediaan Kantor Pusat PT MRT Jakarta": 15, "Optimasi Perjalanan Dinas Karyawan": 15, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Indeks GRC": 2.5, "Penyelesaian Temuan Audit": 2.5 },
+    "Annisa Mayangsari": { "Terlaksananya kegiatan budget controlling": 10, "Tercapainya success rate pengelolaan layanan umum": 25, "Indeks Kepuasan Stakeholder": 2.5, "Jumlah Inisiatif Peningkatan Proses atau Efisiensi": 20, "Petty Cash Handling": 22.5, "Tingkat Kesesuaian Rencana Pengadaan": 10, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Indeks GRC": 2.5, "Penyelesaian Temuan Audit": 2.5 },
+    "Rakhmat": { "Tercapainya success rate pengelolaan layanan umum": 20, "Indeks Kepuasan Stakeholder": 2.5, "Jumlah Inisiatif Peningkatan Proses atau Efisiensi": 20, "Tingkat Kepatuhan Prosedur Keselamatan": 20, "Pengelolaan Inventaris Aset Kantor": 10, "Tingkat Kesesuaian Rencana Pengadaan": 7.5, "Penyediaan Kantor Pusat PT MRT Jakarta": 10, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Indeks GRC": 2.5, "Penyelesaian Temuan Audit": 2.5 },
+    "Agung Prasetyo Wicaksono": { "Tercapainya success rate pengelolaan layanan umum": 20, "Indeks Kepuasan Stakeholder": 2.5, "Jumlah Inisiatif Peningkatan Proses atau Efisiensi": 20, "Tingkat Kepatuhan Prosedur Keselamatan": 20, "Pengelolaan Inventaris Aset Kantor": 10, "Tingkat Kesesuaian Rencana Pengadaan": 7.5, "Penyediaan Kantor Pusat PT MRT Jakarta": 10, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Indeks GRC": 2.5, "Penyelesaian Temuan Audit": 2.5 },
+    "Siti Zahratus Solihat": { "Terlaksananya kegiatan budget controlling": 20, "Tercapainya success rate pengelolaan layanan umum": 15, "Indeks Kepuasan Stakeholder": 2.5, "Jumlah Inisiatif Peningkatan Proses atau Efisiensi": 15, "Petty Cash Handling": 20, "Tingkat Kesesuaian Rencana Pengadaan": 7.5, "Optimasi Perjalanan Dinas Karyawan": 10, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Indeks GRC": 2.5, "Penyelesaian Temuan Audit": 2.5 },
+    "Abdul Ajid": { "Tercapainya success rate pengelolaan layanan umum": 20, "Indeks Kepuasan Stakeholder": 2.5, "Jumlah Inisiatif Peningkatan Proses atau Efisiensi": 25, "Tingkat Kepatuhan Prosedur Keselamatan": 20, "Pengelolaan Inventaris Aset Kantor": 15, "Tingkat Kesesuaian Rencana Pengadaan": 7.5, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Indeks GRC": 2.5, "Penyelesaian Temuan Audit": 2.5 },
+    "Dharisa Inayah Ramadhan": { "Terlaksananya kegiatan budget controlling": 10, "Tercapainya success rate pengelolaan layanan umum": 25, "Indeks Kepuasan Stakeholder": 2.5, "Jumlah Inisiatif Peningkatan Proses atau Efisiensi": 20, "Petty Cash Handling": 22.5, "Tingkat Kesesuaian Rencana Pengadaan": 10, "Tingkat pemenuhan IDP": 2.5, "Indeks Knowledge Management": 2.5, "Indeks GRC": 2.5, "Penyelesaian Temuan Audit": 2.5 }
+};
+/* ===================== END KPI DATA ===================== */
+
+/* ===================== INIT SELECTS + CLUSTERING (6) ===================== */
+function sortByName(list) {
+  return [...list].sort((a,b) => a.name.localeCompare(b.name, "id-ID"));
+}
+function fillKpiSelectEmployeesOnly(selectId){
+  const el = document.getElementById(selectId);
+  sortByName(employees).forEach(p => el.add(new Option(p.name, p.name)));
+}
+function initWorksheetCluster(){
+  const wsSel = document.getElementById("ws_nama");
+  wsSel.innerHTML = '<option value="" selected disabled>-- Pilih Nama --</option>';
+
+  const ogEmp = document.createElement("optgroup");
+  ogEmp.label = "KARYAWAN";
+  sortByName(employees).forEach(e => ogEmp.appendChild(new Option(e.name, e.name)));
+  wsSel.appendChild(ogEmp);
+
+  const ogLeader = document.createElement("optgroup");
+  ogLeader.label = "LEADER";
+  sortByName(outsourcing).forEach(o => ogLeader.appendChild(new Option(o.name, o.name)));
+  wsSel.appendChild(ogLeader);
+
+  const ogOther = document.createElement("optgroup");
+  ogOther.label = "LAINNYA";
+  ogOther.appendChild(new Option("Lainnya (input nama)", "__CUSTOM__"));
+  wsSel.appendChild(ogOther);
+}
+window.onload = () => {
+  initWorksheetCluster();
+  fillKpiSelectEmployeesOnly("s_nama");
+  fillKpiSelectEmployeesOnly("k26_nama");
+  routeTo("landing");
+};
+
+/* ===================== WORKSHEET ===================== */
+function findPersonWS(name) {
+  return employees.find(e => e.name === name) || outsourcing.find(o => o.name === name) || null;
+}
+function ws_handleNameChange() {
+  const sel = document.getElementById("ws_nama");
+  const custom = document.getElementById("ws_nama_custom");
+
+  if (sel.value === "__CUSTOM__") {
+    custom.style.display = "block";
+    custom.value = "";
+    document.getElementById("ws_nik").value = "";
+    document.getElementById("ws_jabatan").value = "";
+    custom.focus();
+    return;
+  }
+
+  custom.style.display = "none";
+  const p = findPersonWS(sel.value);
+  document.getElementById("ws_nik").value = p ? (p.nik || "") : "";
+  document.getElementById("ws_jabatan").value = p ? (p.title || "") : "";
+}
+function ws_handleLocationChange() {
+  const sel = document.getElementById("ws_lokasiSelect");
+  const inp = document.getElementById("ws_lokasiInput");
+  inp.style.display = sel.value === "Lainnya" ? "block" : "none";
+  if (sel.value !== "Lainnya") inp.value = "";
+}
+function ws_addEvidence() {
+  const wrap = document.getElementById("ws_eviWrap");
+  const idx = wrap.querySelectorAll(".ws_evi_file").length + 1;
+
+  const box = document.createElement("div");
+  box.className = "p-2 border rounded bg-white";
+  box.innerHTML = `
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="fw-bold">Bukti ${idx}</div>
+      <button type="button" class="btn btn-sm btn-outline-danger"
+        onclick="this.closest('div.p-2').remove(); ws_renumberEvidence();">Hapus</button>
+    </div>
+
+    <input type="file" class="form-control mb-2 ws_evi_file" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+
+    <div class="rich-editor-container">
+      <div class="editor-toolbar">
+        <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+        <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+        <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+        <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+      </div>
+      <div class="editor-content ws_evi_note" contenteditable="true" placeholder="Keterangan bukti..."></div>
+    </div>
+  `;
+  wrap.appendChild(box);
+}
+function ws_renumberEvidence(){
+  const wrap = document.getElementById("ws_eviWrap");
+  wrap.querySelectorAll(".p-2.border.rounded.bg-white .fw-bold").forEach((el,i)=>{
+    el.innerText = "Bukti " + (i+1);
+  });
+}
+function ws_generate() {
+  const namaSel = document.getElementById("ws_nama").value;
+  const namaCustom = document.getElementById("ws_nama_custom").value.trim();
+  const namaFinal = (namaSel === "__CUSTOM__") ? (namaCustom || "") : namaSel;
+
+  if (!namaFinal) return alert("Nama wajib diisi.");
+  if (!document.getElementById("ws_judul").value) return alert("Judul wajib diisi.");
+  if (!document.getElementById("ws_tanggal").value) return alert("Tanggal wajib diisi.");
+  if (!document.getElementById("ws_nama_atasan").value) return alert("Nama atasan wajib diisi.");
+  if (!document.getElementById("ws_jabatan_atasan").value) return alert("Jabatan atasan wajib diisi.");
+
+  const locSel = document.getElementById("ws_lokasiSelect").value;
+  if (locSel === "Lainnya" && !document.getElementById("ws_lokasiInput").value.trim()) {
+    return alert("Lokasi (Lainnya) wajib diisi.");
+  }
+
+  const eviFiles = Array.from(document.querySelectorAll(".ws_evi_file"));
+  const eviNotes = Array.from(document.querySelectorAll(".ws_evi_note"));
+
+  const hasAny = eviFiles.some(inp => inp.files && inp.files[0]);
+  if (!hasAny) return alert("Minimal 1 bukti wajib diupload.");
+
+  for (let i=0;i<eviFiles.length;i++){
+    const f = eviFiles[i].files && eviFiles[i].files[0] ? eviFiles[i].files[0] : null;
+    const n = eviNotes[i] ? plainTextFromHtml(eviNotes[i]) : "";
+    if (f && !n) return alert("Keterangan wajib diisi untuk setiap bukti yang diupload.");
+    if (n && !f) return alert("Jika mengisi keterangan, file bukti juga wajib diupload.");
+    if (f && !isAllowedImage(f)) return alert("Bukti hanya boleh JPG/PNG.");
+  }
+
+  const p = findPersonWS(namaSel);
+  document.getElementById("wr_nama").innerText = namaFinal;
+  document.getElementById("wr_nik").innerText = (p && namaSel !== "__CUSTOM__") ? (p.nik || "-") : "-";
+  document.getElementById("wr_jabatan").innerText = (p && namaSel !== "__CUSTOM__") ? (p.title || "-") : "-";
+
+  document.getElementById("wr_judul").innerText = document.getElementById("ws_judul").value;
+  document.getElementById("wr_tanggal").innerText = document.getElementById("ws_tanggal").value;
+
+  let loc = locSel;
+  if (locSel === "Lainnya") loc = document.getElementById("ws_lokasiInput").value.trim();
+  document.getElementById("wr_lokasi").innerText = loc;
+
+  document.getElementById("wr_deskripsi").innerHTML = document.getElementById("ws_deskripsi").innerHTML || "-";
+  document.getElementById("wr_catatan").innerHTML = document.getElementById("ws_catatan").innerHTML || "-";
+
+  document.getElementById("wr_atasan_nama").innerText = document.getElementById("ws_nama_atasan").value;
+  document.getElementById("wr_atasan_jabatan").innerText = document.getElementById("ws_jabatan_atasan").value;
+  document.getElementById("wr_pelaksana_nama").innerText = namaFinal;
+  document.getElementById("wr_pelaksana_jabatan").innerText = (p && namaSel !== "__CUSTOM__") ? (p.title || "-") : "-";
+
+  const d = new Date();
+  document.getElementById("wr_date").innerText = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+
+  let photos = "";
+  eviFiles.forEach((inp, i) => {
+    const f = inp.files && inp.files[0] ? inp.files[0] : null;
+    if (!f) return;
+    const note = eviNotes[i] ? (eviNotes[i].innerHTML || "") : "";
+    photos += `
+      <div class="col-md-6 col-12">
+        <div class="p-2 border rounded bg-light">
+          <div class="small text-muted mb-2">${note}</div>
+          <img src="${URL.createObjectURL(f)}" class="img-fluid border rounded shadow-sm"
+               style="max-height:420px; width:100%; object-fit:contain; background:#f8fafc;">
+        </div>
+      </div>`;
+  });
+  document.getElementById("wr_photos").innerHTML = photos;
+
+  routeTo("workSheetReport");
+}
+
+/* ===================== KPI: EXTRA EVIDENCE ===================== */
+function addExtraEvidence(wrapId, fileClass, noteClass) {
+  const wrap = document.getElementById(wrapId);
+  const idx = wrap.querySelectorAll("." + fileClass).length + 1;
+
+  const box = document.createElement("div");
+  box.className = "p-2 border rounded bg-white";
+  box.innerHTML = `
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="fw-bold">Bukti Tambahan ${idx}</div>
+      <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('div.p-2').remove()">Hapus</button>
+    </div>
+
+    <input type="file" class="form-control mb-2 ${fileClass}" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+
+    <div class="rich-editor-container">
+      <div class="editor-toolbar">
+        <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+        <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+        <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+        <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+      </div>
+      <div class="editor-content ${noteClass}" contenteditable="true" placeholder="Keterangan bukti tambahan..."></div>
+    </div>
+  `;
+  wrap.appendChild(box);
+}
+
+/* ===================== KPI 2025 ===================== */
+function single_handleNameChange() {
+  const name = document.getElementById("s_nama").value;
+  const emp = employees.find(e => e.name === name);
+  document.getElementById("s_nik").value = emp ? emp.nik : "";
+  document.getElementById("s_jabatan").value = emp ? emp.title : "";
+
+  const kpiSel = document.getElementById("s_obj");
+  kpiSel.innerHTML = "<option value=''>-- Pilih Item KPI 2025 --</option>";
+  document.getElementById("single_dynamic").style.display = "none";
+  document.getElementById("s_krContainer").innerHTML = "";
+  document.getElementById("s_extraWrap").innerHTML = "";
+
+  const w = employeeWeights2025[name];
+  if (!w) return;
+
+  Object.keys(w).forEach(k => {
+    if (kpiData2025[k]) kpiSel.add(new Option(k, k));
+  });
+}
+function single_renderKeyResults() {
+  const kpiName = document.getElementById("s_obj").value;
+  const data = kpiData2025[kpiName];
+  if (!data) { document.getElementById("single_dynamic").style.display = "none"; return; }
+
+  document.getElementById("single_dynamic").style.display = "block";
+  document.getElementById("s_formula").innerText = data.formula || "-";
+
+  const mode = getKpiMode(kpiName);
+  let html = "";
+
+  (data.items || []).forEach((item) => {
+    const maxAttr =
+  (mode === "SCALE5") ? 'max="5"' :
+  (mode === "CAP100") ? 'max="100"' :
+  "";
+    html += `
+      <div class="mb-2 border p-3 rounded bg-white shadow-sm">
+        <h6 class="fw-bold text-primary mb-2">${item.kr}</h6>
+        <div class="d-flex flex-column flex-md-row gap-2 align-items-md-center">
+          <div class="badge bg-light text-dark border px-3 py-2 text-wrap">Target: ${item.target} ${item.unit || ""}</div>
+          <div class="input-group">
+            <span class="input-group-text bg-white fw-bold">Realisasi</span>
+            <input type="number" class="form-control s_inp fw-bold"
+                   data-target="${item.target}"
+                   data-weight="${item.relativeWeight}"
+                   data-unit="${item.unit || ""}"
+                   placeholder="0" min="0" step="any" ${maxAttr}>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  document.getElementById("s_krContainer").innerHTML = html;
+}
+function single_calculate() {
+  calculateReport({
+    idName: "s_nama",
+    idObj: "s_obj",
+    idDeclare: "s_declare",
+    idTtd: "s_ttd",
+    classInp: "s_inp",
+    idBukti: "s_buktiMain",
+    idEditor: "s_editor_main",
+    idJabatan: "s_jabatan",
+    dataSource: kpiData2025,
+    classExtraFile: "s_extra_file",
+    classExtraNote: "s_extra_note"
+  });
+}
+
+/* ===================== KPI 2026 ===================== */
+function k26_handleNameChange() {
+  const name = document.getElementById("k26_nama").value;
+  const emp = employees.find(e => e.name === name);
+  document.getElementById("k26_nik").value = emp ? emp.nik : "";
+  document.getElementById("k26_jabatan").value = emp ? emp.title : "";
+
+  const kpiSel = document.getElementById("k26_obj");
+  kpiSel.innerHTML = "<option value=''>-- Pilih Item KPI 2026 --</option>";
+  document.getElementById("k26_dynamic").style.display = "none";
+  document.getElementById("k26_krContainer").innerHTML = "";
+  document.getElementById("k26_extraWrap").innerHTML = "";
+
+  // (1) KPI 2026 difilter berdasarkan bobot karyawan 2026
+  const w = employeeWeights2026[name];
+  if (w) {
+    Object.keys(w).forEach(k => {
+      if (kpiData2026[k]) kpiSel.add(new Option(k, k));
+    });
+  } else {
+    // fallback: tampilkan semua jika bobot belum ditempel
+    Object.keys(kpiData2026 || {}).forEach(k => kpiSel.add(new Option(k, k)));
+  }
+}
+function k26_renderKeyResults() {
+  const kpiName = document.getElementById("k26_obj").value;
+  const data = kpiData2026[kpiName];
+  if (!data) { document.getElementById("k26_dynamic").style.display = "none"; return; }
+
+  document.getElementById("k26_dynamic").style.display = "block";
+  document.getElementById("k26_formula").innerText = data.formula || "-";
+
+  const mode = getKpiMode(kpiName);
+  let html = "";
+
+  (data.items || []).forEach((item) => {
+    const maxAttr =
+  (mode === "SCALE5") ? 'max="5"' :
+  (mode === "CAP100") ? 'max="100"' :
+  "";
+    html += `
+      <div class="mb-2 border p-3 rounded bg-white shadow-sm">
+        <h6 class="fw-bold text-dark mb-2">
+          ${item.kr}
+          <span class="badge bg-warning text-dark ms-1">Bobot KR: ${item.relativeWeight}%</span>
+        </h6>
+        <div class="d-flex flex-column flex-md-row gap-2 align-items-md-center">
+          <div class="badge bg-light text-dark border px-3 py-2 text-wrap">Target: ${item.target} ${item.unit || ""}</div>
+          <div class="input-group">
+            <span class="input-group-text bg-white fw-bold">Realisasi</span>
+            <input type="number" class="form-control k26_inp fw-bold"
+                   data-target="${item.target}"
+                   data-weight="${item.relativeWeight}"
+                   data-unit="${item.unit || ""}"
+                   placeholder="0" min="0" step="any" ${maxAttr}>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  document.getElementById("k26_krContainer").innerHTML = html;
+}
+function k26_calculate() {
+  calculateReport({
+    idName: "k26_nama",
+    idObj: "k26_obj",
+    idDeclare: "k26_declare",
+    idTtd: "k26_ttd",
+    classInp: "k26_inp",
+    idBukti: "k26_buktiMain",
+    idEditor: "k26_editor_main",
+    idJabatan: "k26_jabatan",
+    dataSource: kpiData2026,
+    classExtraFile: "k26_extra_file",
+    classExtraNote: "k26_extra_note"
+  });
+}
+
+/* ===================== CALCULATION (1) KPI 2025/2026 ===================== */
+function calculateReport(cfg) {
+  const {
+    idName, idObj, idDeclare, idTtd,
+    classInp, idBukti, idEditor, idJabatan,
+    dataSource,
+    classExtraFile = null,
+    classExtraNote = null
+  } = cfg;
+
+  if (!document.getElementById(idDeclare).checked) return alert("Wajib centang pernyataan!");
+  if (!document.getElementById(idTtd).files[0]) return alert("Wajib upload TTD!");
+  if (!document.getElementById(idBukti).files[0]) return alert("Wajib upload bukti utama!");
+
+  const noteMainText = plainTextFromHtml(document.getElementById(idEditor));
+  if (!noteMainText) return alert("Keterangan bukti utama wajib diisi!");
+
+  const ttdFile = document.getElementById(idTtd).files[0];
+  const mainFile = document.getElementById(idBukti).files[0];
+  if (!isAllowedImage(ttdFile)) return alert("TTD hanya boleh JPG/PNG");
+  if (!isAllowedImage(mainFile)) return alert("Bukti hanya boleh JPG/PNG");
+
+  const inputs = document.querySelectorAll("." + classInp);
+  if (!inputs.length) return alert("KR belum tampil. Pilih item KPI terlebih dahulu.");
+  for (const inp of inputs) {
+    if (inp.value === "") return alert("Isi semua realisasi!");
+  }
+
+  // Extra evidence validation
+  if (classExtraFile && classExtraNote) {
+    const exFiles = Array.from(document.querySelectorAll("." + classExtraFile));
+    const exNotes = Array.from(document.querySelectorAll("." + classExtraNote));
+    for (let i = 0; i < exFiles.length; i++) {
+      const f = exFiles[i].files && exFiles[i].files[0] ? exFiles[i].files[0] : null;
+      const n = exNotes[i] ? plainTextFromHtml(exNotes[i]) : "";
+      if (f && !n) return alert("Keterangan wajib diisi untuk setiap bukti tambahan yang diupload!");
+      if (n && !f) return alert("Jika mengisi keterangan bukti tambahan, file-nya juga wajib diupload!");
+      if (f && !isAllowedImage(f)) return alert("Bukti tambahan hanya boleh JPG/PNG");
+    }
+  }
+
+  const empName = document.getElementById(idName).value;
+  const kpiName = document.getElementById(idObj).value;
+  const jabatan = document.getElementById(idJabatan).value || "-";
+  const dataKPI = dataSource[kpiName] || {};
+  const items = dataKPI.items || [];
+
+  const mode = getKpiMode(kpiName);
+
+  let sumScore = 0;   // SCALE5: 0..5 ; others: 0..(bisa >100 jika UNCAPPED)
+  let totalBobot = 0; // idealnya 100
+  let rows = "";
+
+  inputs.forEach((inp, idx) => {
+    const target = parseFloat(inp.dataset.target);
+    const weightKR = parseFloat(inp.dataset.weight);
+    const real = parseFloat(inp.value);
+
+    const item = items[idx] || {};
+    const unit = item.unit || "";
+
+    let scorePart = 0;
+
+    if (!isFinite(weightKR)) {
+      scorePart = 0;
+    } else if (mode === "SCALE5") {
+      const r = isFinite(real) ? Math.max(0, Math.min(real, 5)) : 0;
+      scorePart = r * (weightKR / 100);
+    } else {
+      if (!isFinite(target)) {
+        scorePart = 0;
+      } else if (target === 0) {
+        // target 0: 0 adalah "baik"
+        scorePart = (real === 0) ? weightKR : 0;
+      } else {
+        let ratio = isFinite(real) ? (real / target) : 0;
+        if (mode === "CAP100") ratio = Math.min(ratio, 1);
+        scorePart = ratio * weightKR;
+      }
+    }
+
+    sumScore += scorePart;
+    totalBobot += (isFinite(weightKR) ? weightKR : 0);
+
+    rows += `
+      <tr>
+        <td class="text-start">${(item.kr || ("KR " + (idx + 1)))}</td>
+        <td>${isFinite(target) ? target : "-"} ${unit}</td>
+        <td>${isFinite(real) ? real : "-"}</td>
+        <td>${isFinite(weightKR) ? weightKR : 0}%</td>
+        <td class="fw-bold">${isFinite(scorePart) ? scorePart.toFixed(2) : "0.00"}</td>
+      </tr>`;
+  });
+
+  // jika total bobot KR tidak 100, normalisasi ke 100 (atau 5 untuk SCALE5)
+  if (totalBobot > 0 && Math.abs(totalBobot - 100) > 0.0001) {
+    if (mode === "SCALE5") {
+      // sumScore saat ini 0..5*(totalBobot/100) → normalisasi ke 0..5
+      sumScore = (sumScore / totalBobot) * 100; // jadi 0..5
+    } else {
+      // sumScore saat ini 0..(bisa >100)*(totalBobot/100) → normalisasi ke basis 100
+      sumScore = (sumScore / totalBobot) * 100;
+    }
+    totalBobot = 100;
+  }
+
+  // final display
+  let finalSfDisplay = 0;
+  if (mode === "SCALE5") {
+    finalSfDisplay = sumScore; // 0..5
+  } else {
+    const ratio = sumScore / 100; // 0..(bisa >1)
+    finalSfDisplay = computeSf(ratio); // 80/90/100/110/120
+  }
+
+  document.getElementById("sr_nama").innerText = empName;
+  document.getElementById("sr_jabatan_kpi").innerText = jabatan;
+  document.getElementById("sr_obj").innerText = kpiName;
+
+  document.getElementById("sr_rows").innerHTML = rows;
+  document.getElementById("sr_totalBobot").innerText = totalBobot + "%";
+  document.getElementById("sr_totalScore").innerText = (mode === "SCALE5") ? sumScore.toFixed(2) : sumScore.toFixed(2);
+  document.getElementById("sr_totalScoreFoot").innerText = (mode === "SCALE5") ? sumScore.toFixed(2) : sumScore.toFixed(2);
+  document.getElementById("sr_sf").innerText = (mode === "SCALE5") ? finalSfDisplay.toFixed(1) : String(finalSfDisplay);
+
+  // Evidence render
+  let htmlEvi = `
+    <div class="mb-3">
+      <div class="fw-bold mb-2">Bukti Utama</div>
+      <div class="small text-muted mb-2">${document.getElementById(idEditor).innerHTML || ""}</div>
+      <img src="${URL.createObjectURL(mainFile)}" class="img-fluid border rounded"
+           style="max-height:420px; width:100%; object-fit:contain; background:#f8fafc;">
+    </div>`;
+
+  if (classExtraFile && classExtraNote) {
+    const extraFiles = Array.from(document.querySelectorAll("." + classExtraFile));
+    const extraNotes = Array.from(document.querySelectorAll("." + classExtraNote));
+    const blocks = extraFiles.map((inp, i) => {
+      const f = inp.files && inp.files[0] ? inp.files[0] : null;
+      if (!f) return "";
+      const note = extraNotes[i] ? (extraNotes[i].innerHTML || "") : "";
+      return `
+        <div class="mb-3">
+          <div class="fw-bold mb-2">Bukti Tambahan ${i + 1}</div>
+          <div class="small text-muted mb-2">${note}</div>
+          <img src="${URL.createObjectURL(f)}" class="img-fluid border rounded"
+               style="max-height:320px; width:100%; object-fit:contain; background:#f8fafc;">
+        </div>`;
+    }).join("");
+    if (blocks.trim()) htmlEvi += `<hr class="my-3">${blocks}`;
+  }
+
+  document.getElementById("sr_evi").innerHTML = htmlEvi;
+
+  document.getElementById("sr_ttdImg").src = URL.createObjectURL(ttdFile);
+  document.getElementById("sr_sigNama").innerText = empName;
+  document.getElementById("sr_sigJabatan").innerText = jabatan;
+
+  const d = new Date();
+  document.getElementById("sr_date").innerText = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+
+  routeTo("singleReport");
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
