@@ -1941,7 +1941,7 @@ window.__wsReportMeta = null;
 function ws_formatDDMMYYYY(dateStr){
   // dateStr: "DD-MM-YYYY"
   if(!dateStr) return "";
-  const [y,m,d] = dateStr.split("-");
+  const [d,m,y] = dateStr.split("-");
   if(!y || !m || !d) return "";
   return `${d}${m}${y}`;
 }
