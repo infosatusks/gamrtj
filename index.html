@@ -1156,7 +1156,7 @@ function execCmd(cmd) { document.execCommand(cmd, false, null); }
 
 /* ===================== ROUTING + FOOTER RULES (2) ===================== */
 // ===== KPI LOGIN GATE (front-end) =====
-
+const KPIPROTECTED = new Set(["single","kpi2026","singleReport"]);
 function requireKpiAuth(targetPageId){
   if (!KPI_PROTECTED.has(targetPageId)) return false;
   if (sessionStorage.getItem("kpiAuthed") === "1") return false;
