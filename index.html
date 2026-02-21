@@ -1156,7 +1156,9 @@ function execCmd(cmd) { document.execCommand(cmd, false, null); }
 
 /* ===================== ROUTING + FOOTER RULES (2) ===================== */
 // ===== KPI LOGIN GATE (front-end) =====
-const KPI_PROTECTED = new Set(["single","kpi2026","singleReport"]);
+const KPIAUTHUSER = "ga-pkwtt";
+const KPIAUTHPASS = "ga2019";
+const KPIPROTECTED = new Set(["single","kpi2026","singleReport"]);
 
 function requireKpiAuth(targetPageId){
   if (!KPI_PROTECTED.has(targetPageId)) return false;
