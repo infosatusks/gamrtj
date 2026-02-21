@@ -1156,9 +1156,6 @@ function execCmd(cmd) { document.execCommand(cmd, false, null); }
 
 /* ===================== ROUTING + FOOTER RULES (2) ===================== */
 // ===== KPI LOGIN GATE (front-end) =====
-const KPIAUTHUSER = "ga-pkwtt";
-const KPIAUTHPASS = "ga2019";
-const KPIPROTECTED = new Set(["single","kpi2026","singleReport"]);
 
 function requireKpiAuth(targetPageId){
   if (!KPI_PROTECTED.has(targetPageId)) return false;
@@ -1167,8 +1164,6 @@ function requireKpiAuth(targetPageId){
   routeTo("login");
   return true;
 }
-
-
 
 function isKpiAuthed() {
   return sessionStorage.getItem("kpiAuthed") === "1";
