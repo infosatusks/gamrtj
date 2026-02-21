@@ -756,7 +756,7 @@ body.on-landing{ padding-bottom: 0 !important; }
             </div>
 
             <button type="button" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow-sm" onclick="ws_generate()">
-              <i class="bi bi-printer me-2"></i>Preview & Print
+              <i class="bi bi-printer me-2"></i>Preview & Print (Tunggu 5-10 detik)
             </button>
           </form>
         </div>
@@ -776,7 +776,12 @@ body.on-landing{ padding-bottom: 0 !important; }
 
       <div class="cardx" id="wsReportContent">
         <div class="cardx-b p-4 p-md-5">
-          <h4 class="text-primary fw-bold mb-4 text-uppercase">Laporan Kegiatan Operasional Area</h4>
+          <div class="d-flex justify-content-between align-items-baseline mb-4">
+  <h4 class="text-primary fw-bold text-uppercase m-0">
+    Laporan Kegiatan Operasional Area
+  </h4>
+  <h4 class="text-primary fw-bold m-0" id="wrticket">-</h4>
+</div>
 
           <div class="row g-3 align-items-end mb-4">
             <div class="col-md-8">
@@ -1099,6 +1104,41 @@ body.on-landing{ padding-bottom: 0 !important; }
 
 <script>
 
+function wsReadFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+    r.readAsDataURL(file);
+  });
+}
+
+function wsJenisPrefix(jenisFinal){
+  const j = String(jenisFinal || "").toLowerCase();
+  if (j.startsWith("5r")) return "5R";
+  if (j.includes("project monitoring")) return "PM";
+  if (j.includes("project evaluation")) return "PE";
+  if (j.includes("incident")) return "IR";
+  return "OT"; // Lainnya/unknown
+}
+
+function wsRandomAlnum(n = 5){
+  const chars = "0123456789abcdefghijklmnopqrstuvwxyz";
+  try{
+    const a = new Uint8Array(n);
+    crypto.getRandomValues(a);
+    return Array.from(a, x => chars[x % chars.length]).join("");
+  }catch(e){
+    let out = "";
+    for(let i=0;i<n;i++) out += chars[Math.floor(Math.random()*chars.length)];
+    return out;
+  }
+}
+
+function wsBuildTicketNo(jenisFinal){
+  return `${wsJenisPrefix(jenisFinal)}-${wsRandomAlnum(5)}`; // contoh: 5R-728a2
+}
+
 
 /* ===================== THEME + EDITOR ===================== */
 function toggleDarkMode() {
@@ -1116,9 +1156,17 @@ function execCmd(cmd) { document.execCommand(cmd, false, null); }
 
 /* ===================== ROUTING + FOOTER RULES (2) ===================== */
 // ===== KPI LOGIN GATE (front-end) =====
-const KPI_AUTH_USER = "ga-pkwtt";
-const KPI_AUTH_PASS = "ga@2019";
-const KPI_PROTECTED = new Set(["single", "kpi2026", "singleReport"]);
+const KPI_PROTECTED = new Set(["single","kpi2026","singleReport"]);
+
+function requireKpiAuth(targetPageId){
+  if (!KPI_PROTECTED.has(targetPageId)) return false;
+  if (sessionStorage.getItem("kpiAuthed") === "1") return false;
+  sessionStorage.setItem("kpiAfterLogin", targetPageId);
+  routeTo("login");
+  return true;
+}
+
+
 
 function isKpiAuthed() {
   return sessionStorage.getItem("kpiAuthed") === "1";
@@ -1561,7 +1609,7 @@ function ws_renumberEvidence(){
     el.innerText = "Bukti " + (i+1);
   });
 }
-function ws_generate() {
+async function ws_generate() {
   const namaSel = document.getElementById("ws_nama").value;
   const namaCustom = document.getElementById("ws_nama_custom").value.trim();
   const namaFinal = (namaSel === "__CUSTOM__") ? (namaCustom || "") : namaSel;
@@ -1616,6 +1664,9 @@ function ws_generate() {
 
   document.getElementById("wr_lokasi").innerText = loc;
   document.getElementById("wr_jenis").innerText = jenisFinal || "-";
+  const ticketNo = wsBuildTicketNo(jenisFinal).toUpperCase();
+  document.getElementById("wrticket").innerText = ticketNo;
+
   document.getElementById("wr_area").innerText  = area || "-";
 
   document.getElementById("wr_deskripsi").innerHTML = document.getElementById("ws_deskripsi").innerHTML || "-";
@@ -1630,23 +1681,41 @@ function ws_generate() {
   document.getElementById("wr_date").innerText = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
 
   let photos = "";
-  let evidenceCount = 0;
-  eviFiles.forEach((inp, i) => {
-    const f = inp.files && inp.files[0] ? inp.files[0] : null;
-    if (!f) return;
-    evidenceCount++;
+const evidence = [];
 
-    const note = eviNotes[i] ? (eviNotes[i].innerHTML || "") : "";
-    photos += `
-      <div class="col-md-6 col-12">
-        <div class="p-2 border rounded bg-light">
-          <div class="small text-muted mb-2">${note}</div>
-          <img src="${URL.createObjectURL(f)}" class="img-fluid border rounded shadow-sm"
-               style="max-height:420px; width:100%; object-fit:contain; background:#f8fafc;">
-        </div>
-      </div>`;
+for (let i = 0; i < eviFiles.length; i++) {
+  const inp = eviFiles[i];
+  const f = (inp && inp.files && inp.files[0]) ? inp.files[0] : null;
+  if (!f) continue;
+
+  const noteHtml = eviNotes[i] ? (eviNotes[i].innerHTML || "") : "";
+  const noteText = eviNotes[i] ? plainTextFromHtml(eviNotes[i]) : "";
+
+  // penting: ini yang bikin Apps Script bisa upload ke Drive
+  const dataUrl = await wsReadFileAsDataUrl(f);
+
+  evidence.push({
+    fileName: f.name,
+    mimeType: f.type,
+    noteText,
+    dataUrl
   });
-  document.getElementById("wr_photos").innerHTML = photos;
+
+  // preview di report (tetap pakai objectURL, cepat)
+  photos += `
+    <div class="col-md-6 col-12">
+      <div class="p-2 border rounded bg-light">
+        <div class="small text-muted mb-2">${noteHtml}</div>
+        <img src="${URL.createObjectURL(f)}" class="img-fluid border rounded shadow-sm"
+             style="max-height:420px; width:100%; object-fit:contain; background:#f8fafc;">
+      </div>
+    </div>`;
+}
+
+document.getElementById("wr_photos").innerHTML = photos;
+
+const evidenceCount = evidence.length;
+
 
   // ===== simpan meta untuk export & gsheet =====
   window.__wsReportMeta = {
@@ -1656,7 +1725,8 @@ function ws_generate() {
     judul: document.getElementById("ws_judul").value,
     tanggal: document.getElementById("ws_tanggal").value,
     waktu,
-    jenis: jenisFinal,
+	  ticketNo,
+  jenis: jenisFinal,
     lokasi: loc,
     area,
     deskripsiText: plainTextFromHtml(document.getElementById("ws_deskripsi")),
@@ -1665,8 +1735,19 @@ function ws_generate() {
     catatanHtml: document.getElementById("ws_catatan").innerHTML || "",
     namaAtasan: document.getElementById("ws_nama_atasan").value,
     jabatanAtasan: document.getElementById("ws_jabatan_atasan").value,
+	evidence,
     evidenceCount
   };
+  
+try{
+  await wsSaveToGSheet();
+  alert("Laporan sudah terekam. Silakan cek Google Sheet.");
+}catch(err){
+  alert("Autosave gagal: " + (err?.message || err));
+}
+
+
+routeTo("workSheetReport"); // preview tetap jalan
 
   routeTo("workSheetReport");
 }
@@ -2013,7 +2094,9 @@ function calculateReport(cfg) {
   routeTo("singleReport");
 }
 // ====== KONFIG (isi URL Web App Apps Script Anda) ======
-const WS_GSHEET_WEBAPP_URL = ""; // contoh: "https://script.google.com/macros/s/XXXX/exec"
+// KONFIG: isi URL Web App Apps Script Anda
+const WSGSHEETWEBAPPURL = "https://script.google.com/macros/s/AKfycbw0r2UH9-nM8Mlju7VsYFnr94UCJlDapiJmq9wytDNhXrJjiNheR5ZrtRfa7v7S2afYQQ/exec";
+
 
 // simpan meta report terakhir untuk penamaan file & payload
 window.__wsReportMeta = null;
@@ -2080,8 +2163,19 @@ async function wsDownloadPDF(){
 
     // Fit to paper: scale by width, center vertically jika muat 1 halaman
     if(imgH <= pageH){
-      const y = (pageH - imgH) / 2;
-      pdf.addImage(imgData, "JPEG", 0, y, imgW, imgH);
+	const pageWmm = 210;
+const pageHmm = 297;
+
+const imgW = pageWmm;
+const imgH = (props.height * imgW) / props.width;
+
+if (imgH <= pageHmm) {
+  const pdf = new jsPDF("p", "mm", [pageWmm, imgH]); // tinggi mengikuti konten
+  pdf.addImage(imgData, "JPEG", 0, 0, imgW, imgH);
+  pdf.save(base + ".pdf");
+  return;
+}
+
     }else{
       // Jika terlalu panjang, split multi-page (tetap fit width)
       let heightLeft = imgH;
@@ -2106,56 +2200,31 @@ async function wsDownloadPDF(){
 }
 
 async function wsSaveToGSheet(){
-  try{
-    if(!WS_GSHEET_WEBAPP_URL) return alert("Coming Soon");
+  if(!WSGSHEETWEBAPPURL) return;
 
-    const m = window.__wsReportMeta;
-    if(!m) return alert("Belum ada data Preview. Silakan klik Preview & Print dulu.");
+  const m = window.__wsReportMeta;
+  if(!m) throw new Error("Meta report kosong. Klik Preview Print dulu.");
 
-    const payload = {
-      // meta
-      createdAt: new Date().toISOString(),
-      // identitas
-      nama: m.nama,
-      nik: m.nik,
-      jabatan: m.jabatan,
-      // detail
-      judul: m.judul,
-      tanggal: m.tanggal,
-      waktu: m.waktu,
-      jenis: m.jenis,
-      lokasi: m.lokasi,
-      area: m.area,
-      // konten (kirim plain + html)
-      deskripsiText: m.deskripsiText,
-      catatanText: m.catatanText,
-      deskripsiHtml: m.deskripsiHtml,
-      catatanHtml: m.catatanHtml,
-      // validasi
-      namaAtasan: m.namaAtasan,
-      jabatanAtasan: m.jabatanAtasan,
-      // bukti ringkas
-      evidenceCount: m.evidenceCount
-    };
+  const payload = {
+    createdAt: new Date().toISOString(), // penting: ada () setelah Date
+	ticketNo: m.ticketNo,      // <-- tambahkan ini
+    meta: m,
+    identitas: { nama: m.nama, nik: m.nik, jabatan: m.jabatan },
+    detail: { judul: m.judul, tanggal: m.tanggal, waktu: m.waktu, jenis: m.jenis, lokasi: m.lokasi, area: m.area },
+    konten: { deskripsiText: m.deskripsiText, catatanText: m.catatanText },
+    validasi: { namaAtasan: m.namaAtasan, jabatanAtasan: m.jabatanAtasan },
+    evidence: Array.isArray(m.evidence) ? m.evidence : []
+  };
 
-    const res = await fetch(WS_GSHEET_WEBAPP_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await res.json().catch(()=> ({}));
-    if(!res.ok) throw new Error(data?.message || "Request gagal.");
-
-    if(data.ticketNo){
-      alert("Tersimpan ke Google Sheet.\nTicket No: " + data.ticketNo);
-    }else{
-      alert("Tersimpan ke Google Sheet.");
-    }
-  }catch(err){
-    alert("Gagal simpan ke GSheet: " + (err?.message || err));
-  }
+  await fetch(WSGSHEETWEBAPPURL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
 }
+
+
 
 </script>
 
