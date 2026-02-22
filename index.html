@@ -462,47 +462,6 @@ body.on-landing{ padding-bottom: 0 !important; }
 
   <div class="container my-4 my-md-5" id="innerPages">
 
-<!-- LOGIN KPI -->
-<section id="pageLogin" class="page">
-  <div class="cardx">
-    <div class="cardx-h">
-      <h5 class="text-primary m-0" style="font-weight:900">
-        <i class="bi bi-shield-lock me-2"></i>Login Akses Evaluasi KPI
-      </h5>
-      <span class="badge bg-light text-dark border">Username & Password Hubungi Admin</span>
-    </div>
-
-    <div class="cardx-b">
-      <div class="alert alert-warning small mb-3">
-        Halaman Evaluasi KPI memerlukan login!
-      </div>
-
-      <form id="loginForm" onsubmit="event.preventDefault(); submitKpiLogin();">
-        <div class="mb-3">
-          <label class="form-label fw-bold">Username</label>
-          <input type="text" class="form-control" id="loginUser" autocomplete="username" required />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label fw-bold">Password</label>
-          <input type="password" class="form-control" id="loginPass" autocomplete="current-password" required />
-        </div>
-
-        <div id="loginErr" class="text-danger small mb-3" style="display:none;"></div>
-
-        <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow-sm">
-          <i class="bi bi-box-arrow-in-right me-2"></i>Login
-        </button>
-
-        <button type="button" class="btn btn-outline-dark w-100 mt-2 rounded-3" onclick="routeTo('landing')">
-          Kembali ke Landing
-        </button>
-      </form>
-    </div>
-  </div>
-</section>
-
-
     <!-- GUIDE (5) lebih detail + icon) -->
     <section id="pageGuide" class="page">
       <div class="guide-hero mb-3">
@@ -1155,52 +1114,6 @@ function toggleDarkMode() {
 function execCmd(cmd) { document.execCommand(cmd, false, null); }
 
 /* ===================== ROUTING + FOOTER RULES (2) ===================== */
-// ===== KPI LOGIN GATE (front-end) =====
-const KPI_PROTECTED = new Set(["single","kpi2026","singleReport"]);
-
-function requireKpiAuth(targetPageId){
-  if (!KPI_PROTECTED.has(targetPageId)) return false;
-  if (sessionStorage.getItem("kpiAuthed") === "1") return false;
-  sessionStorage.setItem("kpiAfterLogin", targetPageId);
-  routeTo("login");
-  return true;
-}
-
-
-
-function isKpiAuthed() {
-  return sessionStorage.getItem("kpiAuthed") === "1";
-}
-
-function requireKpiAuth(targetPageId) {
-  if (!KPI_PROTECTED.has(targetPageId)) return false;
-  if (isKpiAuthed()) return false;
-
-  sessionStorage.setItem("kpiAfterLogin", targetPageId);
-  routeTo("login");
-  return true;
-}
-
-function submitKpiLogin() {
-  const u = document.getElementById("loginUser").value.trim();
-  const p = document.getElementById("loginPass").value;
-
-  const err = document.getElementById("loginErr");
-  err.style.display = "none";
-  err.innerText = "";
-
-  if (u === KPI_AUTH_USER && p === KPI_AUTH_PASS) {
-    sessionStorage.setItem("kpiAuthed", "1");
-    const next = sessionStorage.getItem("kpiAfterLogin") || "single";
-    sessionStorage.removeItem("kpiAfterLogin");
-    routeTo(next);
-    return;
-  }
-
-  err.innerText = "Username / Password salah.";
-  err.style.display = "block";
-}
-
 function shouldShowFooter(pageId){
   const allowed = new Set([
     "guide",
@@ -1213,7 +1126,7 @@ function shouldShowFooter(pageId){
 
 function routeTo(pageId) {
   if (pageId === "landingHome") pageId = "landing";
-  if (requireKpiAuth(pageId)) return;
+  // if (requireKpiAuth(pageId)) return;
 
 
   const landing = document.getElementById("pageLanding");
@@ -1227,7 +1140,6 @@ function routeTo(pageId) {
   });
 
   const pageMap = {
-  login: "pageLogin",
     guide: "pageGuide",
     workSheet: "pageWorkSheet",
     workSheetReport: "pageWorkSheetReport",
