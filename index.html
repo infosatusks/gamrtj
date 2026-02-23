@@ -2057,57 +2057,54 @@ async function wsDownloadJPG(){
   }
 }
 
-async function wsDownloadPDF(){
-  try{
-    const canvas = await ws_captureReportCanvas();
-    const imgData = canvas.toDataURL("image/jpeg", 0.98);
-
-    const { jsPDF } = window.jspdf || {};
-    if(!jsPDF) throw new Error("jsPDF belum ter-load.");
-
-    const pdf = new jsPDF("p", "mm", "a4");
+async function wsDownloadPDF() {
+  try {
+    const canvas = await wscaptureReportCanvas();
+    const imgData = canvas.toDataURL('image/jpeg', 0.98);
+    
+    const jsPDF = window.jspdf;
+    if (!jsPDF) throw new Error('jsPDF belum ter-load.');
+    
+    const pdf = new jsPDF('p', 'mm', 'a4');
     const pageW = pdf.internal.pageSize.getWidth();
     const pageH = pdf.internal.pageSize.getHeight();
-
     const props = pdf.getImageProperties(imgData);
     const imgW = pageW;
     const imgH = (props.height * imgW) / props.width;
-
-    // Fit to paper: scale by width, center vertically jika muat 1 halaman
-    if(imgH <= pageH){
-	const pageWmm = 210;
-const pageHmm = 297;
-
-const imgW = pageWmm;
-const imgH = (props.height * imgW) / props.width;
-
-if (imgH <= pageHmm) {
-  const pdf = new jsPDF("p", "mm", [pageWmm, imgH]); // tinggi mengikuti konten
-  pdf.addImage(imgData, "JPEG", 0, 0, imgW, imgH);
-  pdf.save(base + ".pdf");
-  return;
-}
-
-    }else{
-      // Jika terlalu panjang, split multi-page (tetap fit width)
+    
+    // ✅ TAMBAHKAN BARIS INI
+    const base = wsgetExportBaseName();
+    
+    if (imgH <= pageH) {
+      const pageWmm = 210;
+      const pageHmm = 297;
+      const imgW = pageWmm;
+      const imgH = (props.height * imgW) / props.width;
+      
+      if (imgH <= pageHmm) {
+        const pdf = new jsPDF('p', 'mm', [pageWmm, imgH]);
+        pdf.addImage(imgData, 'JPEG', 0, 0, imgW, imgH);
+        pdf.save(base + '.pdf');
+        return;
+      }
+    } else {
       let heightLeft = imgH;
       let position = 0;
-
-      pdf.addImage(imgData, "JPEG", 0, position, imgW, imgH);
+      pdf.addImage(imgData, 'JPEG', 0, position, imgW, imgH);
       heightLeft -= pageH;
-
-      while(heightLeft > 0){
+      
+      while (heightLeft > 0) {
         position -= pageH;
         pdf.addPage();
-        pdf.addImage(imgData, "JPEG", 0, position, imgW, imgH);
+        pdf.addImage(imgData, 'JPEG', 0, position, imgW, imgH);
         heightLeft -= pageH;
       }
     }
-
-    const base = ws_getExportBaseName();
-    pdf.save(`${base}.pdf`);
-  }catch(err){
-    alert("Gagal export PDF: " + (err?.message || err));
+    
+    pdf.save(base + '.pdf');
+    
+  } catch(err) {
+    alert('Gagal export PDF: ' + (err?.message || err));
   }
 }
 
