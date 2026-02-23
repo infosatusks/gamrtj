@@ -6,7 +6,7 @@ Halo! Ini adalah portal resmi milik Departemen General Affairs PT MRT Jakarta (P
 Semua kode adalah hak cipta dari Rizki Aziz Radyantama. Jika ada yang ingin didiskusikan, hubungi melalui email arizki@jakartamrt.co.id
 Thank you!
 
-============================================================================================
+===========================================================================
 
 Hello! This is the official portal of the General Affairs Department of PT MRT Jakarta (Perseroda), which serves as:
 1. Project management portal
