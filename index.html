@@ -2057,56 +2057,53 @@ async function wsDownloadJPG(){
   }
 }
 
-async function wsDownloadPDF() {
-  try {
-    const canvas = await wscaptureReportCanvas();
-    const imgData = canvas.toDataURL('image/jpeg', 0.98);
-    
-    const jsPDF = window.jspdf;
-    if (!jsPDF) throw new Error('jsPDF belum ter-load.');
-    
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pageW = pdf.internal.pageSize.getWidth();
-    const pageH = pdf.internal.pageSize.getHeight();
-    const props = pdf.getImageProperties(imgData);
-    const imgW = pageW;
-    const imgH = (props.height * imgW) / props.width;
-    
-    // ✅ TAMBAHKAN BARIS INI
-    const base = wsgetExportBaseName();
-    
-    if (imgH <= pageH) {
-      const pageWmm = 210;
-      const pageHmm = 297;
-      const imgW = pageWmm;
-      const imgH = (props.height * imgW) / props.width;
-      
-      if (imgH <= pageHmm) {
-        const pdf = new jsPDF('p', 'mm', [pageWmm, imgH]);
-        pdf.addImage(imgData, 'JPEG', 0, 0, imgW, imgH);
-        pdf.save(base + '.pdf');
-        return;
-      }
-    } else {
-      let heightLeft = imgH;
-      let position = 0;
-      pdf.addImage(imgData, 'JPEG', 0, position, imgW, imgH);
-      heightLeft -= pageH;
-      
-      while (heightLeft > 0) {
-        position -= pageH;
-        pdf.addPage();
-        pdf.addImage(imgData, 'JPEG', 0, position, imgW, imgH);
-        heightLeft -= pageH;
-      }
+async function wsDownloadPDF(){
+  try{
+    const base = ws_getExportBaseName();
+    const canvas = await ws_captureReportCanvas();
+    const imgData = canvas.toDataURL("image/jpeg", 0.98);
+
+    const { jsPDF } = window.jspdf || {};
+    if(!jsPDF) throw new Error("jsPDF belum ter-load.");
+
+    // hitung rasio image dalam satuan mm berdasarkan lebar A4 (210mm)
+    const tmp = new jsPDF("p", "mm", "a4");
+    const props = tmp.getImageProperties(imgData);
+
+    const pageWmm = 210;
+    const pageHmm = 297;
+    const imgWmm  = pageWmm;
+    const imgHmm  = (props.height * imgWmm) / props.width;
+
+    // Jika muat 1 halaman (atau lebih pendek), buat PDF setinggi konten biar tidak kebanyakan whitespace
+    if(imgHmm <= pageHmm){
+      const pdf1 = new jsPDF("p", "mm", [pageWmm, imgHmm]);
+      pdf1.addImage(imgData, "JPEG", 0, 0, imgWmm, imgHmm);
+      pdf1.save(`${base}.pdf`);
+      return;
     }
-    
-    pdf.save(base + '.pdf');
-    
-  } catch(err) {
-    alert('Gagal export PDF: ' + (err?.message || err));
+
+    // Jika panjang: split multi-page A4
+    const pdf = new jsPDF("p", "mm", "a4");
+    let heightLeft = imgHmm;
+    let position = 0;
+
+    pdf.addImage(imgData, "JPEG", 0, position, imgWmm, imgHmm);
+    heightLeft -= pageHmm;
+
+    while(heightLeft > 0){
+      position -= pageHmm;
+      pdf.addPage();
+      pdf.addImage(imgData, "JPEG", 0, position, imgWmm, imgHmm);
+      heightLeft -= pageHmm;
+    }
+
+    pdf.save(`${base}.pdf`);
+  }catch(err){
+    alert("Gagal export PDF: " + (err?.message || err));
   }
 }
+
 
 async function wsSaveToGSheet(){
   if(!WSGSHEETWEBAPPURL) return;
