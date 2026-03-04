@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistem Internal General Affairs | GASSTerus!</title>
+  <title>[DEV VERSION] :: Sistem Internal General Affairs | GASSTerus! v3.0</title>
 	  
   <!-- FAVICON -->
   <link rel="icon" href="logo.png" type="image/x-icon" />
@@ -113,96 +113,75 @@ body.on-landing{ padding-bottom: 0 !important; }
     .dropdown-content button:hover { background-color: rgba(0, 94, 184, 0.1); color: var(--mrt-blue); }
     .nav-item-dropdown:hover .dropdown-content { display: block; }
 
-    /* --- LANDING PAGE --- */
+/* --- LANDING PAGE (FULL BACKGROUND & SQUARE BUTTONS) --- */
     #pageLanding {
       width: 100vw; height: 100vh;
       display: none;
-      background: var(--bg-light);
+      background: url('https://images.unsplash.com/photo-1555660232-2d487f54c935?q=80&w=1920&auto=format&fit=crop');
+      background-size: cover; background-position: center;
+      position: relative;
+      align-items: center; justify-content: center;
     }
     #pageLanding.active { display: flex; }
-
-    .landing-left {
-      flex: 1.2; position: relative;
-      background: url('https://images.unsplash.com/photo-1555660232-2d487f54c935?q=80&w=1920&auto=format&fit=crop');
-      background-size: cover; background-position: center; overflow: hidden;
-    }
-    .landing-left::after {
+    #pageLanding::after {
       content: ""; position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(0, 94, 184, 0.85), rgba(0, 166, 81, 0.7));
+      background: linear-gradient(135deg, rgba(0, 94, 184, 0.85), rgba(0, 166, 81, 0.8));
       z-index: 1;
     }
-    .landing-left-content {
-      position: relative; z-index: 2; height: 100%;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 54px; color: white;
+    .landing-content-wrapper {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: row; align-items: center; justify-content: center;
+      width: 100%; max-width: 1200px; padding: 40px; gap: 50px;
     }
-    .hero-badge {
-      background: rgba(255,255,255,0.2);
-      backdrop-filter: blur(5px);
-      padding: 7px 14px;
-      border-radius: 999px;
-      display: inline-block;
-      margin-bottom: 14px;
-      font-weight: 800;
-      border: 1px solid rgba(255,255,255,0.3);
-      font-size: 0.82rem;
-    }
-    .hero-title {
-      font-size: 3.0rem;
-      font-weight: 900;
-      line-height: 1.08;
-      margin-bottom: 12px;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    }
-    .hero-desc {
-      font-size: 1.0rem;
-      opacity: 0.92;
-      max-width: 600px;
-      line-height: 1.6;
-    }
-
-    .landing-right {
+    .landing-text-area { flex: 1.2; color: white; }
+    .landing-menu-area {
       flex: 0.8;
       background: var(--card-bg);
-      display: flex; align-items: center; justify-content: center;
-      padding: 36px;
-      position: relative;
-      transition: background 0.3s;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    .menu-container { width: 100%; max-width: 420px; }
-    .welcome-text h2 { color: var(--mrt-blue); font-weight: 900; font-size: 1.9rem; margin-bottom: 2px; }
-    .menu-label { font-size: 0.72rem; color: #94a3b8; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+    
+    .hero-badge {
+      background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);
+      padding: 7px 14px; border-radius: 999px; display: inline-block;
+      margin-bottom: 14px; font-weight: 800; border: 1px solid rgba(255,255,255,0.3); font-size: 0.82rem; color: white;
+    }
+    .hero-title { font-size: 3.0rem; font-weight: 900; line-height: 1.08; margin-bottom: 12px; text-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .hero-desc { font-size: 1.0rem; opacity: 0.92; max-width: 600px; line-height: 1.6; }
+    
+    .welcome-text h2 { color: var(--mrt-blue); font-weight: 900; font-size: 1.6rem; margin-bottom: 2px; }
+    .menu-label { font-size: 0.72rem; color: #94a3b8; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; margin-top: 16px; }
 
+    /* KOTAK PERSEGI (GRID) */
+    .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .menu-btn {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 16px;
-      margin-bottom: 12px;
-      border-radius: 16px; cursor: pointer;
-      text-decoration: none; transition: all 0.2s ease;
-      border: 2px solid transparent; background: var(--input-bg);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+      padding: 15px 10px; border-radius: 16px; cursor: pointer; text-decoration: none;
+      transition: all 0.2s ease; border: 1px solid var(--border-color); background: var(--input-bg);
+      aspect-ratio: 1 / 1; /* MEMBUAT BUTTON PERSEGI */
     }
-    .btn-wrap { display: flex; align-items: center; gap: 12px; }
+    .menu-btn:hover { border-color: var(--mrt-blue); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+    
+    .btn-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
     .btn-icon {
-      width: 44px; height: 44px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem; flex-shrink: 0; transition: 0.2s;
+      width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0; transition: 0.2s; background: rgba(0, 94, 184, 0.06); color: var(--mrt-blue);
     }
-    .btn-info { display: flex; flex-direction: column; }
-    .btn-title { font-weight: 800; font-size: 0.98rem; line-height: 1.2; color: var(--text-dark); }
-    .btn-desc { font-size: 0.78rem; font-weight: 500; margin-top: 2px; color: var(--text-muted); }
-
-    .menu-btn.outline { border: 1px solid var(--border-color); color: var(--text-dark); }
-    .menu-btn.outline .btn-icon { background: rgba(0,0,0,0.05); color: var(--text-dark); }
-    body.dark-mode .menu-btn.outline .btn-icon { background: #333; color: #fff; }
-    .menu-btn.outline:hover { border-color: var(--mrt-blue); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-    .menu-btn.outline:hover .btn-icon { background: rgba(0, 94, 184, 0.1); color: var(--mrt-blue); }
-    .menu-btn.outline:hover .btn-title { color: var(--mrt-blue); }
+    .menu-btn:hover .btn-icon { background: var(--mrt-blue); color: #fff; }
+    .btn-title { font-weight: 800; font-size: 0.85rem; line-height: 1.2; color: var(--text-dark); }
+    .btn-desc { display: none; } /* Deskripsi disembunyikan supaya muat di kotak persegi */
 
     .landing-footer { margin-top: 22px; text-align: center; font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
 
     @media (max-width: 992px) {
-  #pageLanding { flex-direction: column; height: 100vh; min-height: 100vh; overflow: hidden; }
-  .landing-right { overflow-y: auto; }
+      .landing-content-wrapper { flex-direction: column; padding: 20px; overflow-y: auto; height: 100%; justify-content: flex-start; }
+      .landing-text-area { flex: none; margin-bottom: 20px; margin-top: 40px; }
+      .hero-title { font-size: 2.2rem; }
+      .menu-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .menu-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     }
 
     /* --- INNER PAGES --- */
@@ -384,6 +363,18 @@ body.on-landing{ padding-bottom: 0 !important; }
             <button onclick="routeTo('kpi2026')">Evaluasi KPI 2026</button>
           </div>
         </div>
+		
+		<div class="nav-item-dropdown">
+          <button class="btn-nav">
+            <i class="bi bi-kanban"></i> Project Management
+            <i class="bi bi-chevron-down ms-1" style="font-size:0.7em;"></i>
+          </button>
+          <div class="dropdown-content">
+            <button onclick="routeTo('pmPlanning')">Project Planning</button>
+            <button onclick="routeTo('pmMonitoring')">Project Monitoring</button>
+            <button onclick="routeTo('pmEvaluation')">Project Evaluation</button>
+          </div>
+        </div>
 
         <button class="btn-nav d-none d-md-inline-block" onclick="routeTo('guide')"><i class="bi bi-question-circle"></i> Panduan</button>
       </div>
@@ -391,68 +382,78 @@ body.on-landing{ padding-bottom: 0 !important; }
   </div>
 
   <!-- LANDING -->
-  <section id="pageLanding" class="active no-print">
-    <div class="landing-left">
-      <div class="landing-left-content">
-        <div>
-          <div class="hero-badge"><i class="bi bi-building me-2"></i>General Affairs Department</div>
-          <h1 class="hero-title">Sistem Pelaporan<br/>Kegiatan Operasional</h1>
-          <p class="hero-desc">Platform internal General Affairs Department untuk pembuatan laporan, kertas kerja, dan evaluasi kinerja tahunan.</p>
-        </div>
+<section id="pageLanding" class="active no-print">
+    <div class="landing-content-wrapper">
+      
+      <div class="landing-text-area">
+        <div class="hero-badge"><i class="bi bi-building me-2"></i>General Affairs Department</div>
+        <h1 class="hero-title">Sistem Pelaporan<br/>Operasional & Project</h1>
+        <p class="hero-desc">Platform internal General Affairs Department untuk pembuatan laporan, kertas kerja, evaluasi kinerja, dan Project Management.</p>
       </div>
-    </div>
 
-    <div class="landing-right">
-      <div class="menu-container">
+      <div class="landing-menu-area">
         <div class="welcome-text">
           <h2>Selamat Datang!</h2>
-		  <h2>Lagi Cari Apa Nih? <br></h2>
+          <p class="text-muted fw-bold mb-0">Lagi Cari Apa Nih?</p>
         </div>
+
         <div class="menu-label">PELAPORAN HARIAN</div>
-        <div class="menu-btn outline" onclick="routeTo('workSheet')">
-          <div class="btn-wrap">
-            <div class="btn-icon"><i class="bi bi-journal-richtext"></i></div>
-            <div class="btn-info">
-              <div class="btn-title">Buat Kertas Kerja</div>
-              <div class="btn-desc">Laporan Patrol, Project, & Incident</div>
+        <div class="menu-grid" style="grid-template-columns: repeat(1, 1fr);">
+          <div class="menu-btn" onclick="routeTo('workSheet')" style="aspect-ratio: auto; flex-direction: row; padding: 12px 16px; justify-content: flex-start; text-align: left;">
+            <div class="btn-wrap" style="flex-direction: row; gap: 16px;">
+              <div class="btn-icon"><i class="bi bi-journal-richtext"></i></div>
+              <div class="btn-info">
+                <div class="btn-title">Buat Kertas Kerja</div>
+                <div class="btn-desc" style="display: block; font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">Laporan Patrol, Project, & Incident</div>
+              </div>
             </div>
           </div>
-          <i class="bi bi-arrow-right"></i>
         </div>
 
-        <div class="menu-label mt-4">EVALUASI KINERJA</div>
-        <div class="menu-btn outline" onclick="routeTo('kpi2026')">
-          <div class="btn-wrap">
-            <div class="btn-icon"><i class="bi bi-clipboard-data text-primary"></i></div>
-            <div class="btn-info">
-              <div class="btn-title">Evaluasi KPI 2026</div>
-              <div class="btn-desc">Pelaporan Kinerja Tahun 2026</div>
+        <div class="menu-label">PROJECT MANAGEMENT</div>
+        <div class="menu-grid">
+          <div class="menu-btn" onclick="routeTo('pmPlanning')">
+            <div class="btn-wrap">
+              <div class="btn-icon"><i class="bi bi-diagram-3 text-primary"></i></div>
+              <div class="btn-title">Planning</div>
             </div>
           </div>
-          <i class="bi bi-arrow-right"></i>
-        </div>
-
-        <div class="menu-btn outline" onclick="routeTo('single')">
-          <div class="btn-wrap">
-            <div class="btn-icon"><i class="bi bi-clipboard-data text-success"></i></div>
-            <div class="btn-info">
-              <div class="btn-title">Evaluasi KPI 2025</div>
-              <div class="btn-desc">Pelaporan Kinerja Tahun 2025</div>
+          <div class="menu-btn" onclick="routeTo('pmMonitoring')">
+            <div class="btn-wrap">
+              <div class="btn-icon"><i class="bi bi-activity text-success"></i></div>
+              <div class="btn-title">Monitoring</div>
             </div>
           </div>
-          <i class="bi bi-arrow-right"></i>
+          <div class="menu-btn" onclick="routeTo('pmEvaluation')">
+            <div class="btn-wrap">
+              <div class="btn-icon"><i class="bi bi-clipboard-check text-warning"></i></div>
+              <div class="btn-title">Evaluation</div>
+            </div>
+          </div>
         </div>
 
-        <div class="menu-label">MASIH BINGUNG CARANYA?</div>
-        <div class="menu-btn outline" onclick="routeTo('guide')">
-          <div class="btn-wrap">
-            <div class="btn-icon"><i class="bi bi-book text-primary"></i></div>
-            <div class="btn-info">
+        <div class="menu-label">EVALUASI KINERJA & BANTUAN</div>
+        <div class="menu-grid">
+          <div class="menu-btn" onclick="routeTo('kpi2026')">
+            <div class="btn-wrap">
+              <div class="btn-icon"><i class="bi bi-rocket-takeoff text-danger"></i></div>
+              <div class="btn-title">KPI 2026</div>
+            </div>
+          </div>
+          <div class="menu-btn" onclick="routeTo('single')">
+            <div class="btn-wrap">
+              <div class="btn-icon"><i class="bi bi-clipboard-data text-info"></i></div>
+              <div class="btn-title">KPI 2025</div>
+            </div>
+          </div>
+          <div class="menu-btn" onclick="routeTo('guide')">
+            <div class="btn-wrap">
+              <div class="btn-icon" style="background:var(--bg-light); border:1px dashed var(--border-color); color:var(--text-muted);">
+                <i class="bi bi-question-lg"></i>
+              </div>
               <div class="btn-title">Panduan</div>
-              <div class="btn-desc">Cara penggunaan sistem</div>
             </div>
           </div>
-          <i class="bi bi-arrow-right text-muted"></i>
         </div>
 
         <div class="landing-footer">Dibuat dengan ❤️ oleh QM Unit - 2026</div>
@@ -727,20 +728,20 @@ body.on-landing{ padding-bottom: 0 !important; }
       <div class="d-flex justify-content-between mb-3 no-print shadow-sm p-3 rounded border bg-white align-items-center">
         <h5 class="m-0 fw-bold text-primary">Preview Kertas Kerja</h5>
         <div class="d-flex gap-2">
-  <button class="btn btn-sm btn-outline-dark" onclick="routeTo('workSheet')">Kembali</button>
-  <button class="btn btn-sm btn-outline-primary fw-bold" onclick="wsDownloadPDF()">Save as PDF</button>
-  <button class="btn btn-sm btn-outline-success fw-bold" onclick="wsDownloadJPG()">Save as Image (JPG)</button>
-</div>
+		<button class="btn btn-sm btn-outline-dark" onclick="routeTo('workSheet')">Kembali</button>
+		<button class="btn btn-sm btn-outline-primary fw-bold" onclick="wsDownloadPDF()">Save as PDF</button>
+		<button class="btn btn-sm btn-outline-success fw-bold" onclick="wsDownloadJPG()">Save as Image (JPG)</button>
+		</div>
       </div>
 
       <div class="cardx" id="wsReportContent">
         <div class="cardx-b p-4 p-md-5">
           <div class="d-flex justify-content-between align-items-baseline mb-4">
-  <h4 class="text-primary fw-bold text-uppercase m-0">
-    Laporan Kegiatan Operasional Area
-  </h4>
-  <h4 class="text-primary fw-bold m-0" id="wrticket">-</h4>
-</div>
+			<h4 class="text-primary fw-bold text-uppercase m-0">
+				Laporan Kegiatan Operasional Area
+			</h4>
+			<h4 class="text-primary fw-bold m-0" id="wrticket">-</h4>
+		  </div>
 
           <div class="row g-3 align-items-end mb-4">
             <div class="col-md-8">
@@ -819,6 +820,536 @@ body.on-landing{ padding-bottom: 0 !important; }
             </div>
             <div class="mt-3 small text-muted">Jakarta, <span id="wr_date"></span></div>
           </div>
+        </div>
+      </div>
+    </section>
+	
+	    <section id="pagePmPlanning" class="page">
+      <div class="cardx">
+        <div class="cardx-h">
+          <h5 class="text-primary m-0" style="font-weight:900;"><i class="bi bi-diagram-3 me-2"></i>Project Planning</h5>
+          <span class="badge bg-light text-dark border">Input Data</span>
+        </div>
+
+        <div class="cardx-b">
+          <form id="ppForm">
+            <div class="row g-3 mb-3">
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Nama Karyawan <span class="text-danger">*</span></label>
+                <select class="form-select" id="pp_nama" onchange="pm_handleEmployeeChange('pp')" required>
+                  <option value="" selected disabled>-- Pilih --</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted">NIK</label>
+                <input type="text" class="form-control bg-light" id="pp_nik" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted">Jabatan</label>
+                <input type="text" class="form-control bg-light" id="pp_jabatan" readonly>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Project Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="pp_title" placeholder="Masukkan judul project..." required>
+            </div>
+
+            <div class="mb-3 p-3 border rounded bg-light">
+              <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                <label class="form-label fw-bold m-0">Team (min. 1)</label>
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="pp_addTeamRow()">+ Tambah Member</button>
+              </div>
+              <div class="mt-2 d-flex flex-column gap-2" id="pp_teamWrap"></div>
+            </div>
+
+            <div class="p-3 border rounded mb-3">
+              <h6 class="fw-bold text-primary mb-3">Background</h6>
+
+              <label class="form-label fw-bold">Problem faced <span class="text-danger">*</span></label>
+              <div class="rich-editor-container mb-3">
+                <div class="editor-toolbar">
+                  <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+                </div>
+                <div id="pp_prob" class="editor-content" contenteditable="true" placeholder="Ceritakan masalah yang kamu hadapi."></div>
+              </div>
+
+              <label class="form-label fw-bold">Resource involved <span class="text-danger">*</span></label>
+              <div class="rich-editor-container mb-3">
+                <div class="editor-toolbar">
+                  <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+                </div>
+                <div id="pp_res" class="editor-content" contenteditable="true" placeholder="Sebutkan siapa saja yang terlibat, dan sumber daya apa yang dibutuhkan."></div>
+              </div>
+
+              <label class="form-label fw-bold">Impact <span class="text-danger">*</span></label>
+              <div class="rich-editor-container">
+                <div class="editor-toolbar">
+                  <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+                </div>
+                <div id="pp_imp" class="editor-content" contenteditable="true" placeholder="Tulis dampak yang diharapkan dengan proyek ini."></div>
+              </div>
+            </div>
+
+            <div class="p-3 border rounded mb-3 bg-light">
+              <h6 class="fw-bold text-primary mb-3">Goal Statement</h6>
+
+              <div class="row g-2">
+                <div class="col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="pp_goal_opt" value="Optimalization">
+                    <label class="form-check-label fw-bold" for="pp_goal_opt">Optimalization</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="pp_goal_cost" value="Cost Efficiency">
+                    <label class="form-check-label fw-bold" for="pp_goal_cost">Cost Efficiency</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="pp_goal_time" value="Time Efficiency">
+                    <label class="form-check-label fw-bold" for="pp_goal_time">Time Efficiency</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="pp_goal_hr" value="Human Resource">
+                    <label class="form-check-label fw-bold" for="pp_goal_hr">Human Resource</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="pp_goal_digi" value="Digitalization">
+                    <label class="form-check-label fw-bold" for="pp_goal_digi">Digitalization</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="pp_goal_oth" value="Others" onchange="pp_toggleOthersGoal()">
+                    <label class="form-check-label fw-bold" for="pp_goal_oth">Others</label>
+                  </div>
+                </div>
+              </div>
+
+              <input type="text" class="form-control mt-2" id="pp_goal_others_text" placeholder="Jika Others, tulis di sini..." style="display:none;">
+
+              <label class="form-label fw-bold mt-3">Target Goal <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="pp_goal_target" placeholder="Buat target dengan metode SMART." required>
+            </div>
+
+            <div class="p-3 border rounded mb-3">
+              <h6 class="fw-bold text-primary mb-3">Project Scope</h6>
+
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label class="form-label fw-bold">Planning Date <span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="pp_plan_date" onchange="pp_recalcCompletion()" required>
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label fw-bold">Duration <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" id="pp_duration" min="1" step="1" value="1" onchange="pp_recalcCompletion()" required>
+                    <button type="button" class="btn btn-outline-primary" id="pp_unit_days" onclick="pp_setUnit('days')">Days</button>
+                    <button type="button" class="btn btn-outline-primary" id="pp_unit_months" onclick="pp_setUnit('months')">Month</button>
+                  </div>
+                  <div class="small text-muted mt-1">Pilih Days/Month.</div>
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label fw-bold">Projected Completion Date</label>
+                  <input type="text" class="form-control bg-light" id="pp_completion" readonly placeholder="">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Expected Budget</label>
+                  <input type="text" class="form-control" id="pp_budget" placeholder="Contoh: 10.000.000">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Project Scale</label>
+                  <input type="text" class="form-control" id="pp_scale" placeholder="Skala pelaksanaan proyek. Contoh: Unit Kerja/Divisi/Korporasi/dsb.">
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3 border rounded mb-3" style="background:rgba(239, 246, 255, 0.5);">
+              <h6 class="fw-bold mb-3">Approval</h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Employee</label>
+                  <input type="text" class="form-control bg-light" id="pp_emp_name" readonly>
+                  <div style="height:12px;"></div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Supervisor Name <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="pp_spv_name" required>
+                  <label class="form-label fw-bold mt-2">Supervisor Title <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="pp_spv_title" required>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow-sm" onclick="pp_generate()">
+              <i class="bi bi-printer me-2"></i>Preview
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <section id="pagePmPlanningReport" class="page">
+      <div class="d-flex justify-content-between mb-3 no-print shadow-sm p-3 rounded border bg-white align-items-center">
+        <h5 class="m-0 fw-bold text-primary">Preview Project Planning</h5>
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-sm btn-outline-dark" onclick="routeTo('pmPlanning')">Kembali</button>
+          <button class="btn btn-sm btn-outline-primary fw-bold" onclick="pmDownloadPDF('planning')">Save as PDF</button>
+          <button class="btn btn-sm btn-outline-success fw-bold" onclick="pmDownloadJPG('planning')">Save as Image (JPG)</button>
+        </div>
+      </div>
+
+      <div class="cardx" id="pmPlanningReportContent">
+        <div class="cardx-b p-4 p-md-5">
+          <h4 class="text-primary fw-bold text-uppercase mb-4">Project Planning</h4>
+
+          <table class="table table-sm table-borderless">
+            <tr><td class="text-muted" style="width:180px;">Nama Karyawan</td><td class="fw-bold" id="ppr_nama"></td></tr>
+            <tr><td class="text-muted">NIK</td><td id="ppr_nik"></td></tr>
+            <tr><td class="text-muted">Jabatan</td><td id="ppr_jabatan"></td></tr>
+            <tr><td class="text-muted">Project Title</td><td class="fw-bold" id="ppr_title"></td></tr>
+            <tr><td class="text-muted">Planning Date</td><td id="ppr_plan_date"></td></tr>
+            <tr><td class="text-muted">Duration</td><td id="ppr_duration"></td></tr>
+            <tr><td class="text-muted">Projected Completion</td><td class="fw-bold" id="ppr_completion"></td></tr>
+            <tr><td class="text-muted">Expected Budget</td><td id="ppr_budget"></td></tr>
+            <tr><td class="text-muted">Project Scale</td><td id="ppr_scale"></td></tr>
+            <tr><td class="text-muted">Goal Statement</td><td id="ppr_goals"></td></tr>
+            <tr><td class="text-muted">Target Goal</td><td class="fw-bold" id="ppr_goal_target"></td></tr>
+          </table>
+
+          <div class="mb-4">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Team</h6>
+            <div class="p-3 border rounded bg-light" id="ppr_team"></div>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Background</h6>
+            <div class="mb-3">
+              <div class="text-muted small fw-bold mb-1">Problem faced</div>
+              <div class="p-3 border rounded bg-light print-html" id="ppr_prob"></div>
+            </div>
+            <div class="mb-3">
+              <div class="text-muted small fw-bold mb-1">Resource involved</div>
+              <div class="p-3 border rounded bg-light print-html" id="ppr_res"></div>
+            </div>
+            <div>
+              <div class="text-muted small fw-bold mb-1">Impact</div>
+              <div class="p-3 border rounded bg-light print-html" id="ppr_imp"></div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Approval</h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="p-3 border rounded">
+                  <div class="text-muted small">Supervisor</div>
+                  <div style="height:64px;"></div>
+                  <div class="fw-bold" id="ppr_spv_name"></div>
+                  <div class="small text-muted" id="ppr_spv_title"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 border rounded">
+                  <div class="text-muted small">Employee</div>
+                  <div style="height:64px;"></div>
+                  <div class="fw-bold" id="ppr_emp_name"></div>
+                  <div class="small text-muted" id="ppr_emp_title"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 small text-muted">Jakarta, <span id="ppr_date"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="pagePmMonitoring" class="page">
+      <div class="cardx">
+        <div class="cardx-h">
+          <h5 class="text-primary m-0" style="font-weight:900;"><i class="bi bi-activity me-2"></i>Project Monitoring</h5>
+          <span class="badge bg-light text-dark border">Input Data</span>
+        </div>
+
+        <div class="cardx-b">
+          <form id="pmForm">
+            <div class="row g-3 mb-3">
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Nama Karyawan <span class="text-danger">*</span></label>
+                <select class="form-select" id="pm_nama" onchange="pm_handleEmployeeChange('pm')" required>
+                  <option value="" selected disabled>-- Pilih --</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted">NIK</label>
+                <input type="text" class="form-control bg-light" id="pm_nik" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted">Jabatan</label>
+                <input type="text" class="form-control bg-light" id="pm_jabatan" readonly>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Project Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="pm_title" required>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-4">
+                <label class="form-label fw-bold">Project Start <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="pm_start" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-bold">Project Status <span class="text-danger">*</span></label>
+                <select class="form-select" id="pm_status" required>
+                  <option>Not Started</option>
+                  <option>On Progress</option>
+                  <option>Completed</option>
+                  <option>Cancel</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-bold">Monitoring Period <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="pm_period" min="1" step="1" value="1" required>
+                  <button type="button" class="btn btn-outline-primary" id="pm_unit_days" onclick="pm_setUnit('days')">Days</button>
+                  <button type="button" class="btn btn-outline-primary" id="pm_unit_months" onclick="pm_setUnit('months')">Month</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Problem Identification <span class="text-danger">*</span></label>
+              <div class="rich-editor-container">
+                <div class="editor-toolbar">
+                  <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+                </div>
+                <div id="pm_prob" class="editor-content" contenteditable="true" placeholder="Tulis masalah dalam pelaksanaan yang telah kamu identifikasi."></div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Corrective Action <span class="text-danger">*</span></label>
+              <div class="rich-editor-container">
+                <div class="editor-toolbar">
+                  <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+                </div>
+                <div id="pm_action" class="editor-content" contenteditable="true" placeholder="Tulis rencana perbaikan atau penyelesaiannya."></div>
+              </div>
+            </div>
+
+            <div class="p-3 border rounded mb-3" style="background:rgba(239, 246, 255, 0.5);">
+              <h6 class="fw-bold mb-3">Approval</h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Employee</label>
+                  <input type="text" class="form-control bg-light" id="pm_emp_name" readonly>
+                  <div style="height:12px;"></div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Supervisor Name <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="pm_spv_name" required>
+                  <label class="form-label fw-bold mt-2">Supervisor Title <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="pm_spv_title" required>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow-sm" onclick="pm_generate()">
+              <i class="bi bi-printer me-2"></i>Preview & Print
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <section id="pagePmMonitoringReport" class="page">
+      <div class="d-flex justify-content-between mb-3 no-print shadow-sm p-3 rounded border bg-white align-items-center">
+        <h5 class="m-0 fw-bold text-primary">Preview Project Monitoring</h5>
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-sm btn-outline-dark" onclick="routeTo('pmMonitoring')">Kembali</button>
+          <button class="btn btn-sm btn-outline-primary fw-bold" onclick="pmDownloadPDF('monitoring')">Save as PDF</button>
+          <button class="btn btn-sm btn-outline-success fw-bold" onclick="pmDownloadJPG('monitoring')">Save as Image (JPG)</button>
+        </div>
+      </div>
+
+      <div class="cardx" id="pmMonitoringReportContent">
+        <div class="cardx-b p-4 p-md-5">
+          <h4 class="text-primary fw-bold text-uppercase mb-4">Project Monitoring</h4>
+
+          <table class="table table-sm table-borderless">
+            <tr><td class="text-muted" style="width:180px;">Nama Karyawan</td><td class="fw-bold" id="pmr_nama"></td></tr>
+            <tr><td class="text-muted">NIK</td><td id="pmr_nik"></td></tr>
+            <tr><td class="text-muted">Jabatan</td><td id="pmr_jabatan"></td></tr>
+            <tr><td class="text-muted">Project Title</td><td class="fw-bold" id="pmr_title"></td></tr>
+            <tr><td class="text-muted">Project Start</td><td id="pmr_start"></td></tr>
+            <tr><td class="text-muted">Project Status</td><td class="fw-bold" id="pmr_status"></td></tr>
+            <tr><td class="text-muted">Monitoring Period</td><td id="pmr_period"></td></tr>
+          </table>
+
+          <div class="mb-4">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Problem Identification</h6>
+            <div class="p-3 border rounded bg-light print-html" id="pmr_prob"></div>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Corrective Action</h6>
+            <div class="p-3 border rounded bg-light print-html" id="pmr_action"></div>
+          </div>
+
+          <div class="mt-4">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Approval</h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="p-3 border rounded">
+                  <div class="text-muted small">Supervisor</div>
+                  <div style="height:64px;"></div>
+                  <div class="fw-bold" id="pmr_spv_name"></div>
+                  <div class="small text-muted" id="pmr_spv_title"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 border rounded">
+                  <div class="text-muted small">Employee</div>
+                  <div style="height:64px;"></div>
+                  <div class="fw-bold" id="pmr_emp_name"></div>
+                  <div class="small text-muted" id="pmr_emp_title"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 small text-muted">Jakarta, <span id="pmr_date"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="pagePmEvaluation" class="page">
+      <div class="cardx">
+        <div class="cardx-h">
+          <h5 class="text-primary m-0" style="font-weight:900;"><i class="bi bi-clipboard-check me-2"></i>Project Evaluation</h5>
+          <span class="badge bg-light text-dark border">Input Data</span>
+        </div>
+
+        <div class="cardx-b">
+          <form id="peForm">
+            <div class="row g-3 mb-3">
+              <div class="col-md-12">
+                <label class="form-label fw-bold">Nama Karyawan <span class="text-danger">*</span></label>
+                <select class="form-select" id="pe_nama" onchange="pm_handleEmployeeChange('pe')" required>
+                  <option value="" selected disabled>-- Pilih --</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted">NIK</label>
+                <input type="text" class="form-control bg-light" id="pe_nik" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-muted">Jabatan</label>
+                <input type="text" class="form-control bg-light" id="pe_jabatan" readonly>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Project Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="pe_title" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Project Status <span class="text-danger">*</span></label>
+              <select class="form-select" id="pe_status" required>
+                <option>Not Started</option>
+                <option>On Progress</option>
+                <option>Completed</option>
+                <option>Cancel</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Lesson Learned <span class="text-danger">*</span></label>
+              <div class="rich-editor-container">
+                <div class="editor-toolbar">
+                  <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+                  <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+                </div>
+                <div id="pe_lesson" class="editor-content" contenteditable="true" placeholder="Tulis apa yang kamu pelajari dari pelaksanaan proyek ini.."></div>
+              </div>
+            </div>
+
+            <div class="mb-3 p-3 border rounded bg-light">
+              <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                <label class="form-label fw-bold m-0">Upload Evidence (min. 1, max. 5) <span class="text-danger">*</span></label>
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="pe_addEvidence()">+ Tambah Evidence</button>
+              </div>
+
+              <div id="pe_eviWrap" class="d-flex flex-column gap-2 mt-2"></div>
+              <div class="small text-muted mt-2">File yang diperbolehkan hanya JPG dan PNG.</div>
+            </div>
+
+            <button type="button" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow-sm" onclick="pe_generate()">
+              <i class="bi bi-printer me-2"></i>Preview & Print
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <section id="pagePmEvaluationReport" class="page">
+      <div class="d-flex justify-content-between mb-3 no-print shadow-sm p-3 rounded border bg-white align-items-center">
+        <h5 class="m-0 fw-bold text-primary">Preview Project Evaluation</h5>
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-sm btn-outline-dark" onclick="routeTo('pmEvaluation')">Kembali</button>
+          <button class="btn btn-sm btn-outline-primary fw-bold" onclick="pmDownloadPDF('evaluation')">Save as PDF</button>
+          <button class="btn btn-sm btn-outline-success fw-bold" onclick="pmDownloadJPG('evaluation')">Save as Image (JPG)</button>
+        </div>
+      </div>
+
+      <div class="cardx" id="pmEvaluationReportContent">
+        <div class="cardx-b p-4 p-md-5">
+          <h4 class="text-primary fw-bold text-uppercase mb-4">Project Evaluation</h4>
+
+          <table class="table table-sm table-borderless">
+            <tr><td class="text-muted" style="width:180px;">Nama Karyawan</td><td class="fw-bold" id="per_nama"></td></tr>
+            <tr><td class="text-muted">NIK</td><td id="per_nik"></td></tr>
+            <tr><td class="text-muted">Jabatan</td><td id="per_jabatan"></td></tr>
+            <tr><td class="text-muted">Project Title</td><td class="fw-bold" id="per_title"></td></tr>
+            <tr><td class="text-muted">Project Status</td><td class="fw-bold" id="per_status"></td></tr>
+          </table>
+
+          <div class="mb-4">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Lesson Learned</h6>
+            <div class="p-3 border rounded bg-light print-html" id="per_lesson"></div>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="fw-bold border-bottom pb-2 mb-3">Evidence</h6>
+            <div class="row g-3" id="per_evidences"></div>
+          </div>
+
+          <div class="mt-3 small text-muted">Jakarta, <span id="per_date"></span></div>
         </div>
       </div>
     </section>
@@ -1098,6 +1629,75 @@ function wsBuildTicketNo(jenisFinal){
   return `${wsJenisPrefix(jenisFinal)}-${wsRandomAlnum(5)}`; // contoh: 5R-728a2
 }
 
+function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+    function fmtSimpleId(){
+      const d = new Date();
+      return `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
+    }
+    function fmtLongId(dateStr){ 
+      if(!dateStr) return "-";
+      const d = new Date(dateStr + "T00:00:00");
+      return new Intl.DateTimeFormat("id-ID",{ day:"2-digit", month:"long", year:"numeric"}).format(d);
+    }
+    function fmtTodayDDMMYYYY(){
+      const d = new Date();
+      const dd = String(d.getDate()).padStart(2,"0");
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const yy = String(d.getFullYear());
+      return `${dd}${mm}${yy}`;
+    }
+    function safeToken(s){
+      return String(s||"").replace(/[\\/:*?"<>|]+/g, "-").replace(/\s+/g, " ").trim();
+    }
+    async function captureCanvasById(elId){
+      const el = document.getElementById(elId);
+      if(!el) throw new Error("Elemen report tidak ditemukan: " + elId);
+      return await html2canvas(el, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
+    }
+    async function downloadJpgByReport(elId, base){
+      const canvas = await captureCanvasById(elId);
+      const a = document.createElement("a");
+      a.download = `${base}.jpg`;
+      a.href = canvas.toDataURL("image/jpeg", 0.95);
+      a.click();
+    }
+    async function downloadPdfByReport(elId, base){
+      const canvas = await captureCanvasById(elId);
+      const imgData = canvas.toDataURL("image/jpeg", 0.98);
+      const { jsPDF } = window.jspdf || {};
+      if(!jsPDF) throw new Error("jsPDF belum ter-load.");
+      const tmp = new jsPDF("p","mm","a4");
+      const props = tmp.getImageProperties(imgData);
+      const pageWmm = 210, pageHmm = 297;
+      const imgWmm = pageWmm;
+      const imgHmm = (props.height * imgWmm) / props.width;
+      if(imgHmm <= pageHmm){
+        const pdf1 = new jsPDF("p","mm",[pageWmm, imgHmm]);
+        pdf1.addImage(imgData, "JPEG", 0, 0, imgWmm, imgHmm);
+        pdf1.save(`${base}.pdf`);
+        return;
+      }
+      const pdf = new jsPDF("p","mm","a4");
+      let heightLeft = imgHmm;
+      let position = 0;
+      pdf.addImage(imgData, "JPEG", 0, position, imgWmm, imgHmm);
+      heightLeft -= pageHmm;
+      while(heightLeft > 0){
+        position -= pageHmm;
+        pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, position, imgWmm, imgHmm);
+        heightLeft -= pageHmm;
+      }
+      pdf.save(`${base}.pdf`);
+    }
+
 
 /* ===================== THEME + EDITOR ===================== */
 function toggleDarkMode() {
@@ -1119,7 +1719,10 @@ function shouldShowFooter(pageId){
     "guide",
     "workSheet", "workSheetReport",
     "single", "singleReport",
-    "kpi2026"
+    "kpi2026",
+    "pmPlanning", "pmPlanningReport",
+    "pmMonitoring", "pmMonitoringReport",
+    "pmEvaluation", "pmEvaluationReport"
   ]);
   return allowed.has(pageId);
 }
@@ -1145,7 +1748,13 @@ function routeTo(pageId) {
     workSheetReport: "pageWorkSheetReport",
     single: "pageSingle",
     singleReport: "pageSingleReport",
-    kpi2026: "pageKpi2026"
+    kpi2026: "pageKpi2026",
+    pmPlanning: "pagePmPlanning",
+    pmPlanningReport: "pagePmPlanningReport",
+    pmMonitoring: "pagePmMonitoring",
+    pmMonitoringReport: "pagePmMonitoringReport",
+    pmEvaluation: "pagePmEvaluation",
+    pmEvaluationReport: "pagePmEvaluationReport"
   };
 
   if (pageId === "landing") {
@@ -1449,6 +2058,28 @@ window.onload = () => {
   initWorksheetCluster();
   fillKpiSelectEmployeesOnly("s_nama");
   fillKpiSelectEmployeesOnly("k26_nama");
+  
+  // Init PM Selects (menggunakan fungsi bawaan v2)
+  fillKpiSelectEmployeesOnly("pp_nama");
+  fillKpiSelectEmployeesOnly("pm_nama");
+  fillKpiSelectEmployeesOnly("pe_nama");
+
+  // Init PM rows default
+  const teamWrap = document.getElementById("pp_teamWrap");
+  if(teamWrap && typeof pp_addTeamRow === "function" && teamWrap.children.length === 0){
+    for(let i=0;i<1;i++) pp_addTeamRow("");
+  }
+  if(typeof pp_setUnit === "function") pp_setUnit("days");
+  if(typeof pm_setUnit === "function") pm_setUnit("days");
+
+  const peWrap = document.getElementById("pe_eviWrap");
+  if(peWrap && typeof pe_addEvidence === "function" && peWrap.children.length === 0) pe_addEvidence();
+
+  const budgetEl = document.getElementById("pp_budget");
+  if(budgetEl && typeof toBudgetFormattedInput === "function"){
+    budgetEl.addEventListener("input", ()=> toBudgetFormattedInput(budgetEl));
+  }
+
   routeTo("landing");
 };
 
@@ -1692,6 +2323,397 @@ function addExtraEvidence(wrapId, fileClass, noteClass) {
   `;
   wrap.appendChild(box);
 }
+
+    /* ===================== PM MODULE ===================== */
+    window.__pmMeta = { planning: null, monitoring: null, evaluation: null };
+
+    function pm_handleEmployeeChange(prefix){
+      const name = document.getElementById(prefix + "_nama").value;
+      const emp = employees.find(e=> e.name === name) || null;
+
+      document.getElementById(prefix + "_nik").value = emp ? emp.nik : "";
+      document.getElementById(prefix + "_jabatan").value = emp ? emp.title : "";
+
+      const empField = document.getElementById(prefix + "_emp_name");
+      if(empField) empField.value = name || "";
+      if(prefix === "pp"){
+        document.getElementById("pp_emp_name").value = name || "";
+      }
+      if(prefix === "pm"){
+        document.getElementById("pm_emp_name").value = name || "";
+      }
+    }
+
+    function buildPmBase(moduleName, employeeName){
+      return safeToken(`${moduleName}_${employeeName}_${fmtTodayDDMMYYYY()}`);
+    }
+
+    async function pmDownloadPDF(type){
+      try{
+        const meta = window.__pmMeta[type];
+        if(!meta) throw new Error("Meta kosong. Klik Preview dulu.");
+        const map = {
+          planning: { elId: "pmPlanningReportContent", module: "Project Planning" },
+          monitoring: { elId: "pmMonitoringReportContent", module: "Project Monitoring" },
+          evaluation: { elId: "pmEvaluationReportContent", module: "Project Evaluation" }
+        };
+        const cfg = map[type];
+        const base = buildPmBase(cfg.module, meta.nama);
+        await downloadPdfByReport(cfg.elId, base);
+      }catch(err){
+        alert("Gagal export PDF: " + (err?.message || err));
+      }
+    }
+
+    async function pmDownloadJPG(type){
+      try{
+        const meta = window.__pmMeta[type];
+        if(!meta) throw new Error("Meta kosong. Klik Preview dulu.");
+        const map = {
+          planning: { elId: "pmPlanningReportContent", module: "Project Planning" },
+          monitoring: { elId: "pmMonitoringReportContent", module: "Project Monitoring" },
+          evaluation: { elId: "pmEvaluationReportContent", module: "Project Evaluation" }
+        };
+        const cfg = map[type];
+        const base = buildPmBase(cfg.module, meta.nama);
+        await downloadJpgByReport(cfg.elId, base);
+      }catch(err){
+        alert("Gagal export JPG: " + (err?.message || err));
+      }
+    }
+
+    let ppUnit = "days";
+    function pp_setUnit(unit){
+      ppUnit = unit;
+      document.getElementById("pp_unit_days").classList.toggle("btn-primary", unit==="days");
+      document.getElementById("pp_unit_days").classList.toggle("btn-outline-primary", unit!=="days");
+      document.getElementById("pp_unit_months").classList.toggle("btn-primary", unit==="months");
+      document.getElementById("pp_unit_months").classList.toggle("btn-outline-primary", unit!=="months");
+      pp_recalcCompletion();
+    }
+
+    function addMonths(dateObj, months){
+      const d = new Date(dateObj.getTime());
+      const day = d.getDate();
+      d.setMonth(d.getMonth() + months);
+      if(d.getDate() < day){ d.setDate(0); }
+      return d;
+    }
+
+    function pp_recalcCompletion(){
+      const dateStr = document.getElementById("pp_plan_date").value;
+      const dur = parseInt(document.getElementById("pp_duration").value, 10);
+      if(!dateStr || !dur || dur < 1){
+        document.getElementById("pp_completion").value = "";
+        return;
+      }
+      const start = new Date(dateStr + "T00:00:00");
+      let end;
+      if(ppUnit === "days"){
+        end = new Date(start.getTime());
+        end.setDate(end.getDate() + dur);
+      }else{
+        end = addMonths(start, dur);
+      }
+      const out = new Intl.DateTimeFormat("id-ID",{ day:"2-digit", month:"long", year:"numeric" }).format(end);
+      document.getElementById("pp_completion").value = out;
+    }
+
+    function pp_toggleOthersGoal(){
+      const chk = document.getElementById("pp_goal_oth");
+      const box = document.getElementById("pp_goal_others_text");
+      box.style.display = chk.checked ? "block" : "none";
+      if(!chk.checked) box.value = "";
+    }
+
+    function pp_addTeamRow(value=""){
+      const wrap = document.getElementById("pp_teamWrap");
+      const idx = wrap.querySelectorAll("input").length + 1;
+
+      const row = document.createElement("div");
+      row.className = "d-flex gap-2 align-items-center";
+      row.innerHTML = `
+        <input type="text" class="form-control" placeholder="Member ${idx}" value="${String(value||"").replace(/"/g,'&quot;')}">
+        <button type="button" class="btn btn-outline-danger" onclick="this.parentElement.remove(); pp_renumberTeam();"><i class="bi bi-x-lg"></i></button>
+      `;
+      wrap.appendChild(row);
+      pp_renumberTeam();
+    }
+
+    function pp_renumberTeam(){
+      const wrap = document.getElementById("pp_teamWrap");
+      const inputs = wrap.querySelectorAll("input");
+      inputs.forEach((inp,i)=> inp.placeholder = "Member " + (i+1));
+    }
+
+    function getSelectedGoals(){
+      const map = [
+        ["pp_goal_opt","Optimalization"],
+        ["pp_goal_cost","Cost Efficiency"],
+        ["pp_goal_time","Time Efficiency"],
+        ["pp_goal_hr","Human Resource"],
+        ["pp_goal_digi","Digitalization"],
+        ["pp_goal_oth","Others"]
+      ];
+      const out = [];
+      map.forEach(([id,label])=>{
+        const el = document.getElementById(id);
+        if(el && el.checked){
+          if(id === "pp_goal_oth"){
+            const txt = document.getElementById("pp_goal_others_text").value.trim();
+            out.push(txt ? `Others: ${txt}` : "Others");
+          }else{
+            out.push(label);
+          }
+        }
+      });
+      return out;
+    }
+
+    function toBudgetFormattedInput(el){
+      const raw = String(el.value || "").replace(/[^\d]/g,"");
+      if(!raw){ el.value = ""; return; }
+      const n = parseInt(raw,10);
+      if(!isFinite(n)){ el.value = ""; return; }
+      el.value = n.toLocaleString("id-ID");
+    }
+
+    function pp_generate(){
+      const nama = document.getElementById("pp_nama").value;
+      if(!nama) return alert("Nama Karyawan wajib dipilih.");
+
+      const title = document.getElementById("pp_title").value.trim();
+      if(!title) return alert("Project Title wajib diisi.");
+
+      const teamInputs = Array.from(document.querySelectorAll("#pp_teamWrap input"));
+      const team = teamInputs.map(i=> i.value.trim()).filter(Boolean);
+      if(team.length < 1) return alert("Team minimal 1 orang (boleh isi nama sendiri atau member lain).");
+
+      const prob = plainTextFromHtml(document.getElementById("pp_prob"));
+      const res = plainTextFromHtml(document.getElementById("pp_res"));
+      const imp = plainTextFromHtml(document.getElementById("pp_imp"));
+      if(!prob) return alert("Problem faced wajib diisi.");
+      if(!res) return alert("Resource involved wajib diisi.");
+      if(!imp) return alert("Impact wajib diisi.");
+
+      const goals = getSelectedGoals();
+      if(goals.length < 1) return alert("Goal Statement minimal pilih 1 opsi.");
+      const chkOther = document.getElementById("pp_goal_oth").checked;
+      if(chkOther && !document.getElementById("pp_goal_others_text").value.trim()){
+        return alert("Jika memilih Others, textbox Others wajib diisi.");
+      }
+
+      const goalTarget = document.getElementById("pp_goal_target").value.trim();
+      if(!goalTarget) return alert("Target Goal wajib diisi.");
+
+      const planDate = document.getElementById("pp_plan_date").value;
+      if(!planDate) return alert("Planning Date wajib diisi.");
+
+      const dur = parseInt(document.getElementById("pp_duration").value,10);
+      if(!dur || dur < 1) return alert("Duration wajib >= 1.");
+
+      pp_recalcCompletion();
+      const completion = document.getElementById("pp_completion").value;
+      if(!completion) return alert("Projected Completion Date belum terbentuk (cek Planning Date & Duration).");
+
+      const spvName = document.getElementById("pp_spv_name").value.trim();
+      const spvTitle = document.getElementById("pp_spv_title").value.trim();
+      if(!spvName) return alert("Supervisor (Nama) wajib diisi.");
+      if(!spvTitle) return alert("Supervisor (Jabatan) wajib diisi.");
+
+      const emp = employees.find(e=> e.name === nama) || null;
+
+      document.getElementById("ppr_nama").innerText = nama;
+      document.getElementById("ppr_nik").innerText = emp ? emp.nik : "-";
+      document.getElementById("ppr_jabatan").innerText = emp ? emp.title : "-";
+      document.getElementById("ppr_title").innerText = title;
+
+      document.getElementById("ppr_plan_date").innerText = fmtLongId(planDate);
+      document.getElementById("ppr_duration").innerText = `${dur} ${ppUnit === "days" ? "Days" : "Month"}`;
+      document.getElementById("ppr_completion").innerText = completion;
+
+      const budget = document.getElementById("pp_budget").value.trim();
+      document.getElementById("ppr_budget").innerText = budget ? budget : "-";
+      document.getElementById("ppr_scale").innerText = document.getElementById("pp_scale").value.trim() || "-";
+
+      document.getElementById("ppr_goals").innerText = goals.join(", ");
+      document.getElementById("ppr_goal_target").innerText = goalTarget;
+
+      document.getElementById("ppr_team").innerHTML = team.map(x=> `<div>• ${escapeHtml(x)}</div>`).join("") || "-";
+
+      document.getElementById("ppr_prob").innerHTML = document.getElementById("pp_prob").innerHTML || "-";
+      document.getElementById("ppr_res").innerHTML = document.getElementById("pp_res").innerHTML || "-";
+      document.getElementById("ppr_imp").innerHTML = document.getElementById("pp_imp").innerHTML || "-";
+
+      document.getElementById("ppr_spv_name").innerText = spvName;
+      document.getElementById("ppr_spv_title").innerText = spvTitle;
+      document.getElementById("ppr_emp_name").innerText = nama;
+      document.getElementById("ppr_emp_title").innerText = emp ? emp.title : "-";
+      document.getElementById("ppr_date").innerText = fmtSimpleId();
+
+      window.__pmMeta.planning = { nama };
+      routeTo("pmPlanningReport");
+    }
+
+    let pmUnit = "days";
+    function pm_setUnit(unit){
+      pmUnit = unit;
+      document.getElementById("pm_unit_days").classList.toggle("btn-primary", unit==="days");
+      document.getElementById("pm_unit_days").classList.toggle("btn-outline-primary", unit!=="days");
+      document.getElementById("pm_unit_months").classList.toggle("btn-primary", unit==="months");
+      document.getElementById("pm_unit_months").classList.toggle("btn-outline-primary", unit!=="months");
+    }
+
+    function pm_generate(){
+      const nama = document.getElementById("pm_nama").value;
+      if(!nama) return alert("Nama Karyawan wajib dipilih.");
+
+      const title = document.getElementById("pm_title").value.trim();
+      if(!title) return alert("Project Title wajib diisi.");
+
+      const start = document.getElementById("pm_start").value;
+      if(!start) return alert("Project Start wajib diisi.");
+
+      const status = document.getElementById("pm_status").value;
+      const period = parseInt(document.getElementById("pm_period").value,10);
+      if(!period || period < 1) return alert("Monitoring Period wajib >= 1.");
+
+      const prob = plainTextFromHtml(document.getElementById("pm_prob"));
+      const action = plainTextFromHtml(document.getElementById("pm_action"));
+      if(!prob) return alert("Problem Identification wajib diisi.");
+      if(!action) return alert("Corrective Action wajib diisi.");
+
+      const spvName = document.getElementById("pm_spv_name").value.trim();
+      const spvTitle = document.getElementById("pm_spv_title").value.trim();
+      if(!spvName) return alert("Supervisor (Nama) wajib diisi.");
+      if(!spvTitle) return alert("Supervisor (Jabatan) wajib diisi.");
+
+      const emp = employees.find(e=> e.name === nama) || null;
+
+      document.getElementById("pmr_nama").innerText = nama;
+      document.getElementById("pmr_nik").innerText = emp ? emp.nik : "-";
+      document.getElementById("pmr_jabatan").innerText = emp ? emp.title : "-";
+      document.getElementById("pmr_title").innerText = title;
+      document.getElementById("pmr_start").innerText = fmtLongId(start);
+      document.getElementById("pmr_status").innerText = status;
+      document.getElementById("pmr_period").innerText = `${period} ${pmUnit === "days" ? "Days" : "Month"}`;
+
+      document.getElementById("pmr_prob").innerHTML = document.getElementById("pm_prob").innerHTML || "-";
+      document.getElementById("pmr_action").innerHTML = document.getElementById("pm_action").innerHTML || "-";
+
+      document.getElementById("pmr_spv_name").innerText = spvName;
+      document.getElementById("pmr_spv_title").innerText = spvTitle;
+      document.getElementById("pmr_emp_name").innerText = nama;
+      document.getElementById("pmr_emp_title").innerText = emp ? emp.title : "-";
+      document.getElementById("pmr_date").innerText = fmtSimpleId();
+
+      window.__pmMeta.monitoring = { nama };
+      routeTo("pmMonitoringReport");
+    }
+
+    function pe_addEvidence(){
+      const wrap = document.getElementById("pe_eviWrap");
+      const current = wrap.querySelectorAll(".pe_evi_file").length;
+      if(current >= 5) return alert("Maksimal evidence adalah 5.");
+
+      const idx = current + 1;
+
+      const box = document.createElement("div");
+      box.className = "p-2 border rounded bg-white";
+      box.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="fw-bold">Evidence ${idx}</div>
+          <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('.p-2').remove(); pe_renumberEvidence();">Hapus</button>
+        </div>
+
+        <input type="file" class="form-control mb-2 pe_evi_file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" ${idx===1 ? "required" : ""}>
+
+        <div class="rich-editor-container">
+          <div class="editor-toolbar">
+            <button type="button" class="editor-btn" onclick="execCmd('bold')"><i class="bi bi-type-bold"></i></button>
+            <button type="button" class="editor-btn" onclick="execCmd('italic')"><i class="bi bi-type-italic"></i></button>
+            <button type="button" class="editor-btn" onclick="execCmd('insertUnorderedList')"><i class="bi bi-list-ul"></i></button>
+            <button type="button" class="editor-btn" onclick="execCmd('insertOrderedList')"><i class="bi bi-list-ol"></i></button>
+          </div>
+          <div class="editor-content pe_evi_note" contenteditable="true" placeholder="Deskripsi evidence (wajib jika upload)..."></div>
+        </div>
+      `;
+      wrap.appendChild(box);
+      pe_renumberEvidence();
+    }
+
+    function pe_renumberEvidence(){
+      const wrap = document.getElementById("pe_eviWrap");
+      const labels = wrap.querySelectorAll(".fw-bold");
+      let n = 0;
+      labels.forEach(l=>{
+        if((l.innerText||"").startsWith("Evidence ")){
+          n++;
+          l.innerText = "Evidence " + n;
+        }
+      });
+    }
+
+    function pe_generate(){
+      const nama = document.getElementById("pe_nama").value;
+      if(!nama) return alert("Nama Karyawan wajib dipilih.");
+
+      const title = document.getElementById("pe_title").value.trim();
+      if(!title) return alert("Project Title wajib diisi.");
+
+      const status = document.getElementById("pe_status").value;
+
+      const lessonText = plainTextFromHtml(document.getElementById("pe_lesson"));
+      if(!lessonText) return alert("Lesson Learned wajib diisi.");
+
+      const eviFiles = Array.from(document.querySelectorAll(".pe_evi_file"));
+      const eviNotes = Array.from(document.querySelectorAll(".pe_evi_note"));
+      const hasAny = eviFiles.some(inp => inp.files && inp.files[0]);
+      if(!hasAny) return alert("Minimal 1 evidence wajib diupload.");
+
+      for(let i=0;i<eviFiles.length;i++){
+        const f = eviFiles[i].files && eviFiles[i].files[0] ? eviFiles[i].files[0] : null;
+        const noteText = eviNotes[i] ? plainTextFromHtml(eviNotes[i]) : "";
+
+        if(f && !noteText) return alert("Deskripsi wajib diisi untuk setiap evidence yang diupload.");
+        if(noteText && !f) return alert("Jika mengisi deskripsi evidence, file-nya juga wajib diupload.");
+        if(f && !isAllowedImage(f)) return alert("Evidence hanya boleh JPG/PNG.");
+      }
+
+      const emp = employees.find(e=> e.name === nama) || null;
+
+      document.getElementById("per_nama").innerText = nama;
+      document.getElementById("per_nik").innerText = emp ? emp.nik : "-";
+      document.getElementById("per_jabatan").innerText = emp ? emp.title : "-";
+      document.getElementById("per_title").innerText = title;
+      document.getElementById("per_status").innerText = status;
+
+      document.getElementById("per_lesson").innerHTML = document.getElementById("pe_lesson").innerHTML || "-";
+
+      let evHtml = "";
+      for(let i=0;i<eviFiles.length;i++){
+        const f = eviFiles[i].files && eviFiles[i].files[0] ? eviFiles[i].files[0] : null;
+        if(!f) continue;
+
+        const noteHtml = eviNotes[i] ? (eviNotes[i].innerHTML || "") : "";
+        evHtml += `
+          <div class="col-md-6 col-12">
+            <div class="p-2 border rounded bg-light">
+              <div class="small text-muted mb-2 print-html">${noteHtml}</div>
+              <img src="${URL.createObjectURL(f)}" class="img-fluid border rounded shadow-sm"
+                   style="max-height:420px; width:100%; object-fit:contain; background:#f8fafc;">
+            </div>
+          </div>
+        `;
+      }
+      document.getElementById("per_evidences").innerHTML = evHtml || "<div class='text-muted'>-</div>";
+
+      document.getElementById("per_date").innerText = fmtSimpleId();
+
+      window.__pmMeta.evaluation = { nama };
+      routeTo("pmEvaluationReport");
+    }
+    /* ===================== END PM MODULE ===================== */
 
 /* ===================== KPI 2025 ===================== */
 function single_handleNameChange() {
@@ -2132,4 +3154,5 @@ async function wsSaveToGSheet(){
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
